@@ -11,15 +11,16 @@ class LandingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    void NaviagteToScreen(){
+    void navigateToScreen(){
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => const AuthScreen(
-                  title: 'Welcome Back!',
-                  subtitle: 'Login to your account',
-                  buttonLabel: 'Login',
-                  isLoginScreen: true)));
+              builder: (context) =>  const AuthScreen(
+                  title: 'Welcome!',
+                  subtitle: 'Register For Unlimited Chat!',
+                  buttonLabel: 'SignUp',
+                  isLoginScreen: false)));
+
     }
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -27,13 +28,13 @@ class LandingScreen extends StatelessWidget {
       body: Stack(
         // Center content horizontally
         children: [
-          Positioned(
+          const Positioned(
             top: 130,
             left: 70,
             child: CircleAvatar(
               radius: 35,
-              backgroundColor: materialColor[50],
-              // backgroundImage: AssetImage(hLandingLogo),
+              //backgroundColor: materialColor[50],
+              backgroundImage: AssetImage(hLandingLogo),
             ),
           ),
           Positioned(
@@ -85,7 +86,7 @@ class LandingScreen extends StatelessWidget {
             bottom: 50,
             left: 40,
             right: 40,
-            child: hElevatedButton(text: 'Get Started', onTap: () => NaviagteToScreen()),
+            child: hElevatedButton(text: 'Get Started', onTap: () => navigateToScreen()),
           ),
         ],
       ),

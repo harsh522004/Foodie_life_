@@ -12,8 +12,8 @@ enum Affordability {
   luxurious,
 }
 
-class Meal {
-  const Meal({
+class MealModel {
+  const MealModel({
     required this.id,
     required this.categories,
     required this.title,

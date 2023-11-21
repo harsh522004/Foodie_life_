@@ -1,12 +1,17 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:foodei_life/Common/elevated_button.dart';
 import 'package:foodei_life/Common/user_profile_image.dart';
 import 'package:foodei_life/constant/images.dart';
+import 'package:foodei_life/features/landing/landing_screen.dart';
+import 'package:foodei_life/screens/Tabs_Screen.dart';
 import 'package:foodei_life/theme/colors.dart';
 import 'package:foodei_life/theme/text_theme.dart';
 
-
+final _firebase = FirebaseAuth.instance;
 
 class AuthScreen extends StatefulWidget {
   final String title;
@@ -37,117 +42,115 @@ class _AuthScreenState extends State<AuthScreen> {
 
   File? _selectedImage;
 
-  final bool _isAuthentication = false;
+  late bool _isAuthentication = false;
 
   // when button Clicked
   void _onSaved() async {
-    // final isValid = _form.currentState!.validate();
-    // if (!isValid || (!widget.isLoginScreen && _selectedImage == null)) {
-    //   return;
-    // }
-    // _form.currentState!.save();
-    // try {
-    //   setState(() {
-    //     _isAuthentication = true;
-    //   });
-    //   if (!widget.isLoginScreen) {
-    //     final userCred = await _firebase.createUserWithEmailAndPassword(
-    //         email: _emailController.text, password: _passController.text);
-    //
-    //     final storageRef = FirebaseStorage.instance
-    //         .ref()
-    //         .child('User_Images')
-    //         .child('${userCred.user!.uid}.jpg');
-    //     await storageRef.putFile(_selectedImage!);
-    //     final userImageUrl = await storageRef.getDownloadURL();
-    //
-    //     await FirebaseFirestore.instance
-    //         .collection('User')
-    //         .doc(userCred.user!.uid)
-    //         .set({
-    //       'username': _usernameController.text,
-    //       'email': _emailController.text,
-    //       'imageUrl': userImageUrl,
-    //     });
-    //
-    //     _usernameController.clear();
-    //     _emailController.clear();
-    //     _passController.clear();
-    //
-    //
-    //
-    //     Navigator.push(
-    //         context, MaterialPageRoute(builder: (context) => WelcomeScreen()));
-    //   } else {
-    //     final userCred = await _firebase.signInWithEmailAndPassword(
-    //         email: _emailController.text, password: _passController.text);
-    //     _emailController.clear();
-    //     _passController.clear();
-    //
-    //     Navigator.push(
-    //         context, MaterialPageRoute(builder: (context) => ChatScreen()));
-    //
-    //     setState(() {
-    //       _isAuthentication = false;
-    //     });
-    //   }
-    // } on FirebaseAuthException catch (error) {
-    //   ScaffoldMessenger.of(context).clearSnackBars();
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(content: Text(error.message ?? 'Authentication Error')));
-    //   setState(() {
-    //     _isAuthentication = false;
-    //   });
-    // }
+    final isValid = _form.currentState!.validate();
+    if (!isValid || (!widget.isLoginScreen && _selectedImage == null)) {
+      return;
+    }
+    _form.currentState!.save();
+    try {
+      setState(() {
+        _isAuthentication = true;
+      });
+      if (!widget.isLoginScreen) {
+        final userCred = await _firebase.createUserWithEmailAndPassword(
+            email: _emailController.text, password: _passController.text);
+
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('User_Images')
+            .child('${userCred.user!.uid}.jpg');
+        await storageRef.putFile(_selectedImage!);
+        final userImageUrl = await storageRef.getDownloadURL();
+
+        await FirebaseFirestore.instance
+            .collection('User')
+            .doc(userCred.user!.uid)
+            .set({
+          'username': _usernameController.text,
+          'email': _emailController.text,
+          'imageUrl': userImageUrl,
+        });
+
+        _usernameController.clear();
+        _emailController.clear();
+        _passController.clear();
+
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => LandingScreen()));
+      } else {
+        final userCred = await _firebase.signInWithEmailAndPassword(
+            email: _emailController.text, password: _passController.text);
+        _emailController.clear();
+        _passController.clear();
+
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => TabsScreen()));
+
+        setState(() {
+          _isAuthentication = false;
+        });
+      }
+    } on FirebaseAuthException catch (error) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(error.message ?? 'Authentication Error')));
+      setState(() {
+        _isAuthentication = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     Widget content = !widget.isLoginScreen
         ? Row(
-      children: [
-        UserProfileImage(
-          onPickImage: (pickedImage) {
-            _selectedImage = pickedImage;
-          },
-        ),
-        const SizedBox(
-          width: 10,
-        ),
-        Column(
-          children: [
-            Text(
-              widget.title,
-              style: HtextTheme.hTextTheme.headlineLarge
-                  ?.copyWith(fontSize: 40),
-            ),
+            children: [
+              UserProfileImage(
+                onPickImage: (pickedImage) {
+                  _selectedImage = pickedImage;
+                },
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Column(
+                children: [
+                  Text(
+                    widget.title,
+                    style: HtextTheme.hTextTheme.headlineLarge
+                        ?.copyWith(fontSize: 40),
+                  ),
 
-            // subtitle
-            Text(
-              widget.subtitle,
-              style: HtextTheme.hTextTheme.titleMedium,
-            ),
-          ],
-        ),
-        // title
-      ],
-    )
+                  // subtitle
+                  Text(
+                    widget.subtitle,
+                    style: HtextTheme.hTextTheme.titleMedium,
+                  ),
+                ],
+              ),
+              // title
+            ],
+          )
         : Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          widget.title,
-          style:
-          HtextTheme.hTextTheme.headlineLarge?.copyWith(fontSize: 40),
-        ),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.title,
+                style:
+                    HtextTheme.hTextTheme.headlineLarge?.copyWith(fontSize: 40),
+              ),
 
-        // subtitle
-        Text(
-          widget.subtitle,
-          style: HtextTheme.hTextTheme.titleMedium,
-        ),
-      ],
-    );
+              // subtitle
+              Text(
+                widget.subtitle,
+                style: HtextTheme.hTextTheme.titleMedium,
+              ),
+            ],
+          );
 
     return Scaffold(
       backgroundColor: materialColor[500],
@@ -314,7 +317,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       Center(
                         child: CircularProgressIndicator(
                           valueColor:
-                          AlwaysStoppedAnimation(materialColor[800]),
+                              AlwaysStoppedAnimation(materialColor[800]),
                         ),
                       ),
                     if (!_isAuthentication)
@@ -329,15 +332,22 @@ class _AuthScreenState extends State<AuthScreen> {
                     const SizedBox(height: 10),
 
                     if (!_isAuthentication)
-                    // Screen Change Text Button
+                      // Screen Change Text Button
                       Center(
                         child: TextButton(
                           onPressed: () {
-                            if(widget.isLoginScreen){
+                            if (widget.isLoginScreen) {
                               Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(builder: (context) => const  AuthScreen(title: 'Sign Up', subtitle: 'Create an account to get started', buttonLabel: 'Sign Up', isLoginScreen: false),),
+                                MaterialPageRoute(
+                                  builder: (context) => const AuthScreen(
+                                      title: 'Sign Up',
+                                      subtitle:
+                                          'Create an account to get started',
+                                      buttonLabel: 'Sign Up',
+                                      isLoginScreen: false),
+                                ),
                               );
-                            } else{
+                            } else {
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                   builder: (context) => const AuthScreen(
@@ -369,7 +379,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                       TextDecoration.underline,
                                     ]),
                                     decorationColor:
-                                    Colors.white, // Set underline color
+                                        Colors.white, // Set underline color
                                   ),
                                 ),
                               ],

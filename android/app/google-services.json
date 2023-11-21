@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "49321399584",
+    "project_id": "foodielife-49f2d",
+    "storage_bucket": "foodielife-49f2d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:49321399584:android:a634d3bf356978e2d9b345",
+        "android_client_info": {
+          "package_name": "com.example.foodei_life"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEwbEN1uT3MdRyFIP6XkFS4B5QKNC9s5Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,64 +1,63 @@
 import 'package:flutter/material.dart';
 import 'package:foodei_life/Models/Meals.dart';
 import 'package:foodei_life/Models/category.dart';
+import 'package:foodei_life/constant/images.dart';
 
-
-const availableCategories = [
+List<Category> availableCategories = [
   Category(
-    'c1',
-    'Italian',
-    color: Colors.purple,
+    categoryImage: const AssetImage(hItalianImage),
+    id: 'c1',
+    title: 'Italian',
   ),
   Category(
-    'c2',
-    'Quick & Easy',
-    color: Colors.red,
+    categoryImage: const AssetImage(hQuickImage),
+    id: 'c2',
+    title: 'Quick & Easy',
   ),
   Category(
-    'c3',
-    'Hamburgers',
-    color: Colors.orange,
+    categoryImage: const AssetImage(hHamburgersImage),
+    id: 'c3',
+    title: 'Hamburgers',
   ),
   Category(
-    'c4',
-    'German',
-    color: Colors.amber,
+    categoryImage: const AssetImage(hGermanImage),
+    id: 'c4',
+    title: 'German',
   ),
   Category(
-    'c5',
-    'Light & Lovely',
-    color: Colors.blue,
+    categoryImage: const AssetImage(hLightImage),
+    id: 'c5',
+    title: 'Light & Lovely',
   ),
   Category(
-    'c6',
-    'Exotic',
-    color: Colors.green,
+    categoryImage: const AssetImage(hExoticImage),
+    id: 'c6',
+    title: 'Exotic',
   ),
   Category(
-    'c7',
-    'Breakfast',
-    color: Colors.lightBlue,
+    categoryImage: const AssetImage(hBreakfastImage),
+    id: 'c7',
+    title: 'Breakfast',
   ),
   Category(
-    'c8',
-    'Asian',
-    color: Colors.lightGreen,
+    categoryImage: const AssetImage(hAsianImage),
+    id: 'c8',
+    title: 'Asian ',
   ),
   Category(
-    'c9',
-    'French',
-    color: Colors.pink,
+    categoryImage: const AssetImage(hFrenchImage),
+    id: 'c9',
+    title: 'French',
   ),
   Category(
-    'c10',
-    'Summer',
-    color: Colors.teal,
+    categoryImage: const AssetImage(hSummerImage),
+    id: 'c10',
+    title: 'Summer',
   ),
 ];
 
-
 const dummyMeals = [
-  Meal(
+  MealModel(
     id: 'm1',
     categories: [
       'c1',
@@ -68,7 +67,7 @@ const dummyMeals = [
     affordability: Affordability.affordable,
     complexity: Complexity.simple,
     imageUrl:
-    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Spaghetti_Bolognese_mit_Parmesan_oder_Grana_Padano.jpg/800px-Spaghetti_Bolognese_mit_Parmesan_oder_Grana_Padano.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Spaghetti_Bolognese_mit_Parmesan_oder_Grana_Padano.jpg/800px-Spaghetti_Bolognese_mit_Parmesan_oder_Grana_Padano.jpg',
     duration: 20,
     ingredients: [
       '4 Tomatoes',
@@ -92,7 +91,7 @@ const dummyMeals = [
     isVegetarian: true,
     isLactoseFree: true,
   ),
-  Meal(
+  MealModel(
     id: 'm2',
     categories: [
       'c2',
@@ -101,7 +100,7 @@ const dummyMeals = [
     affordability: Affordability.affordable,
     complexity: Complexity.simple,
     imageUrl:
-    'https://cdn.pixabay.com/photo/2018/07/11/21/51/toast-3532016_1280.jpg',
+        'https://cdn.pixabay.com/photo/2018/07/11/21/51/toast-3532016_1280.jpg',
     duration: 10,
     ingredients: [
       '1 Slice White Bread',
@@ -120,7 +119,7 @@ const dummyMeals = [
     isVegetarian: false,
     isLactoseFree: false,
   ),
-  Meal(
+  MealModel(
     id: 'm3',
     categories: [
       'c2',
@@ -130,7 +129,7 @@ const dummyMeals = [
     affordability: Affordability.pricey,
     complexity: Complexity.simple,
     imageUrl:
-    'https://cdn.pixabay.com/photo/2014/10/23/18/05/burger-500054_1280.jpg',
+        'https://cdn.pixabay.com/photo/2014/10/23/18/05/burger-500054_1280.jpg',
     duration: 45,
     ingredients: [
       '300g Cattle Hack',
@@ -152,7 +151,7 @@ const dummyMeals = [
     isVegetarian: false,
     isLactoseFree: true,
   ),
-  Meal(
+  MealModel(
     id: 'm4',
     categories: [
       'c4',
@@ -161,7 +160,7 @@ const dummyMeals = [
     affordability: Affordability.luxurious,
     complexity: Complexity.challenging,
     imageUrl:
-    'https://cdn.pixabay.com/photo/2018/03/31/19/29/schnitzel-3279045_1280.jpg',
+        'https://cdn.pixabay.com/photo/2018/03/31/19/29/schnitzel-3279045_1280.jpg',
     duration: 60,
     ingredients: [
       '8 Veal Cutlets',
@@ -187,7 +186,7 @@ const dummyMeals = [
     isVegetarian: false,
     isLactoseFree: false,
   ),
-  Meal(
+  MealModel(
     id: 'm5',
     categories: [
       'c2'
@@ -198,7 +197,7 @@ const dummyMeals = [
     affordability: Affordability.luxurious,
     complexity: Complexity.simple,
     imageUrl:
-    'https://cdn.pixabay.com/photo/2016/10/25/13/29/smoked-salmon-salad-1768890_1280.jpg',
+        'https://cdn.pixabay.com/photo/2016/10/25/13/29/smoked-salmon-salad-1768890_1280.jpg',
     duration: 15,
     ingredients: [
       'Arugula',
@@ -223,7 +222,7 @@ const dummyMeals = [
     isVegetarian: true,
     isLactoseFree: true,
   ),
-  Meal(
+  MealModel(
     id: 'm6',
     categories: [
       'c6',
@@ -233,7 +232,7 @@ const dummyMeals = [
     affordability: Affordability.affordable,
     complexity: Complexity.hard,
     imageUrl:
-    'https://cdn.pixabay.com/photo/2017/05/01/05/18/pastry-2274750_1280.jpg',
+        'https://cdn.pixabay.com/photo/2017/05/01/05/18/pastry-2274750_1280.jpg',
     duration: 240,
     ingredients: [
       '4 Sheets of Gelatine',
@@ -259,7 +258,7 @@ const dummyMeals = [
     isVegetarian: true,
     isLactoseFree: false,
   ),
-  Meal(
+  MealModel(
     id: 'm7',
     categories: [
       'c7',
@@ -268,7 +267,7 @@ const dummyMeals = [
     affordability: Affordability.affordable,
     complexity: Complexity.simple,
     imageUrl:
-    'https://cdn.pixabay.com/photo/2018/07/10/21/23/pancake-3529653_1280.jpg',
+        'https://cdn.pixabay.com/photo/2018/07/10/21/23/pancake-3529653_1280.jpg',
     duration: 20,
     ingredients: [
       '1 1/2 Cups all-purpose Flour',
@@ -290,7 +289,7 @@ const dummyMeals = [
     isVegetarian: true,
     isLactoseFree: false,
   ),
-  Meal(
+  MealModel(
     id: 'm8',
     categories: [
       'c8',
@@ -299,7 +298,7 @@ const dummyMeals = [
     affordability: Affordability.pricey,
     complexity: Complexity.challenging,
     imageUrl:
-    'https://cdn.pixabay.com/photo/2018/06/18/16/05/indian-food-3482749_1280.jpg',
+        'https://cdn.pixabay.com/photo/2018/06/18/16/05/indian-food-3482749_1280.jpg',
     duration: 35,
     ingredients: [
       '4 Chicken Breasts',
@@ -323,7 +322,7 @@ const dummyMeals = [
     isVegetarian: false,
     isLactoseFree: true,
   ),
-  Meal(
+  MealModel(
     id: 'm9',
     categories: [
       'c9',
@@ -332,7 +331,7 @@ const dummyMeals = [
     affordability: Affordability.affordable,
     complexity: Complexity.hard,
     imageUrl:
-    'https://cdn.pixabay.com/photo/2014/08/07/21/07/souffle-412785_1280.jpg',
+        'https://cdn.pixabay.com/photo/2014/08/07/21/07/souffle-412785_1280.jpg',
     duration: 45,
     ingredients: [
       '1 Teaspoon melted Butter',
@@ -372,7 +371,7 @@ const dummyMeals = [
     isVegetarian: true,
     isLactoseFree: false,
   ),
-  Meal(
+  MealModel(
     id: 'm10',
     categories: [
       'c2',
@@ -383,7 +382,7 @@ const dummyMeals = [
     affordability: Affordability.luxurious,
     complexity: Complexity.simple,
     imageUrl:
-    'https://cdn.pixabay.com/photo/2018/04/09/18/26/asparagus-3304997_1280.jpg',
+        'https://cdn.pixabay.com/photo/2018/04/09/18/26/asparagus-3304997_1280.jpg',
     duration: 30,
     ingredients: [
       'White and Green Asparagus',

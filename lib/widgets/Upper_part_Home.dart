@@ -1,81 +1,99 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodei_life/Common/serch_bar.dart';
+import 'package:foodei_life/Provider/User_Data_Provider.dart';
+
 import 'package:foodei_life/constant/images.dart';
 import 'package:foodei_life/theme/colors.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:google_fonts/google_fonts.dart';
-class HomeAboveContent extends StatelessWidget {
 
-
-
+class HomeAboveContent extends ConsumerWidget {
   final VoidCallback openDrawerCallback;
 
-  const HomeAboveContent({super.key, required this.openDrawerCallback});
+  final GlobalKey<ScaffoldState> scaffoldKey;
+
+  const HomeAboveContent(
+      {super.key, required this.scaffoldKey, required this.openDrawerCallback});
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const GFAvatar(
-              backgroundImage: AssetImage(hProfilePic),
-              radius: 40,
-            ),
-            GestureDetector(
-              onTap: openDrawerCallback, // Call _openDrawer when tapped
-              child: Icon(
-                Icons.notes_sharp,
-                color: materialColor[500],
-                size: 40,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 8,
-        ),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userData = ref.watch(userDataProvider);
 
-        // Text title
-        Container(
-          padding: const EdgeInsets.only(left: 5),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Hey! Harsh',
-                style: GoogleFonts.getFont(
-                  'Open Sans',
-                  fontSize: 40,
-                  fontWeight: FontWeight.w600,
+    return userData.when(
+        data: (data) {
+          if (data != null) {
+
+            String username = data['username'];
+            String userImage = data['imageUrl']!;
+
+            return Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GFAvatar(
+                      backgroundImage: NetworkImage(userImage),
+                      radius: 40,
+                    ),
+                    GestureDetector(
+                      onTap: openDrawerCallback, // Call _openDrawer when tapped
+                      child: Icon(
+                        Icons.notes_sharp,
+                        color: materialColor[500],
+                        size: 40,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              Text(
-                'What\'s in your Mind Today?',
-                style: GoogleFonts.getFont(
-                  'Open Sans',
-                  fontSize: 25,
-                  fontWeight: FontWeight.w400,
+                const SizedBox(
+                  height: 8,
                 ),
-              ),
-            ],
-          ),
-        ),
 
-        // Sized Box
-        const SizedBox(
-          height: 15,
-        ),
+                // Text title
+                Container(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Hey! $username',
+                        style: GoogleFonts.getFont(
+                          'Open Sans',
+                          fontSize: 40,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        'What\'s in your Mind Today?',
+                        style: GoogleFonts.getFont(
+                          'Open Sans',
+                          fontSize: 25,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
 
-        // Search Bar
-        HSearchBar(
-          backgroundColor: materialColor[100]!,
-          hintText: 'Search',
-        ),
-      ],
+                // Sized Box
+                const SizedBox(
+                  height: 15,
+                ),
 
-    );
-
+                // Search Bar
+                HSearchBar(
+                  backgroundColor: materialColor[100]!,
+                  hintText: 'Search',
+                ),
+              ],
+            );
+          } else {
+            return const Text(
+                'Data is null'); // Handle the case where data is null
+          }
+        },
+        error: (error, stackTrace) => Text('Error fetching user data: $error'),
+        loading: () => const CircularProgressIndicator());
   }
 }

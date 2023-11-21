@@ -1,160 +1,104 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:foodei_life/Common/Naviagtion_bar_custom.dart';
-import 'package:foodei_life/Common/custom_Card.dart';
-import 'package:foodei_life/Common/serch_bar.dart';
-import 'package:foodei_life/constant/images.dart';
-import 'package:foodei_life/theme/colors.dart';
+
+import 'package:foodei_life/widgets/Category_Card.dart';
+import 'package:foodei_life/Models/Meals.dart';
+
+import '../Models/category.dart';
+
+// Import your search bar widget
+import 'package:foodei_life/constant/Data/dummy_data.dart';
+import 'package:foodei_life/screens/Meals_Screen.dart';
+
+// Import your NavigationButton widget
 import 'package:foodei_life/widgets/Upper_part_Home.dart';
-import 'package:foodei_life/widgets/custom_drawer.dart';
-import 'package:getwidget/getwidget.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:foodei_life/widgets/Side_Drawer.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key, required this.avalaibleMeal});
+
+  final List<MealModel> avalaibleMeal;
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  // Method to open the drawer
-  void openDrawer() {
-    _scaffoldKey.currentState?.openEndDrawer();
+
+  void _selectedCategory(BuildContext context, Category selectedCategory) {
+    final filterMeals = widget.avalaibleMeal
+        .where((meal) => meal.categories.contains(selectedCategory.id))
+        .toList();
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (ctx) => MealsScreen(
+              title: selectedCategory.title,
+              mealsList: filterMeals,
+            )));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              HomeAboveContent(openDrawerCallback: openDrawer),
+    GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-              // Cards
-              Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      CustomCard(
-                          title: "Harsh Butani", color: materialColor[200]!),
-                      CustomCard(
-                          title: "Harsh Butani", color: materialColor[200]!),
-                      CustomCard(
-                          title: "Harsh Butani", color: materialColor[200]!),
-                      CustomCard(
-                          title: "Harsh Butani", color: materialColor[200]!),
-                      CustomCard(
-                          title: "Harsh Butani", color: materialColor[200]!),
-                      // Add more CardItems as needed
-                    ],
-                  ),
+    return SafeArea(
+      child: Scaffold(
+        key: _scaffoldKey,
+        endDrawer: const SideDrawer(),
+        body: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                // Upper Part
+                HomeAboveContent(
+                  openDrawerCallback: () {
+                    _scaffoldKey.currentState!.openEndDrawer();
+
+                    // Define the logic to open the sidebar here
+                  },
+                  scaffoldKey: _scaffoldKey,
                 ),
-              ),
 
-              Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      CustomCard(
-                          title: "Harsh Butani", color: materialColor[200]!),
-                      CustomCard(
-                          title: "Harsh Butani", color: materialColor[200]!),
-                      CustomCard(
-                          title: "Harsh Butani", color: materialColor[200]!),
-                      CustomCard(
-                          title: "Harsh Butani", color: materialColor[200]!),
-                      CustomCard(
-                          title: "Harsh Butani", color: materialColor[200]!),
-                      // Add more CardItems as needed
-                    ],
-                  ),
+                const SizedBox(
+                  height: 10,
                 ),
-              ),
+                // Middle Part (Scrollable Grid of Categories)
 
-              // Navigation Bar
-              const NavigationButton(),
-            ],
-          ),
-        ),
-      ),
-      endDrawer: GFDrawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            Container(
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2, // 2 columns
+                            crossAxisSpacing: 16.0, // Add horizontal spacing
+                            mainAxisSpacing: 16.0,
+                          ),
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
 
-              height: 200,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    materialColor[500]!,
-                    materialColor[400]!,
-                    materialColor[300]!,
-                    // You can change this to any desired color
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-              padding: const EdgeInsets.only(top: 60),
-              alignment: Alignment.center,
-              child: const Column(
-                children: [
-                  GFAvatar(
-                    radius: 40.0,
-                    backgroundImage: AssetImage(hProfilePic),
-                  ),
-                  SizedBox(
-                    height: 8,
-                  ),
-                  Text(
-                    'Harsh Butani',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 20,
-                      color: Colors.black,
+                          // List of categories in Data
+                          itemCount: availableCategories.length,
+                          itemBuilder: (context, index) {
+                            final selectedCategory = availableCategories[index];
+                            return CustomCard(
+                                onTap: (){
+                                  _selectedCategory(context, selectedCategory);
+                                }, category: selectedCategory);
+                          },
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.save,color: Colors.black54,), // Icon for Saved Items
-              title: const Text('Saved Meals'), // Text for "Saved Meals"
-              onTap: () {
-                // Handle the onTap action for Saved Items
-                // You can add your navigation logic here
-              },
-            ),
+                ),
 
-
-            ListTile(
-              leading: const  Icon(Icons.settings,color: Colors.black54,), // Icon for Settings
-              title: const Text('Settings'), // Text for "Settings"
-              onTap: () {
-                // Handle the onTap action for Settings
-                // You can add your navigation logic here
-              },
+                // Lower Part (Navigation Buttons)
+                //const NavigationButton(),
+              ],
             ),
-
-            ListTile(
-              leading: const Icon(Icons.logout,color: Colors.black54,), // Icon for Log Out
-              title: const Text('Log Out'), // Text for "Log Out"
-              onTap: () {
-                // Handle the onTap action for Log Out
-                // You can add your logout logic here
-              },
-            ),
-          ],
-        ),
+          ),
+        //),
       ),
     );
   }
