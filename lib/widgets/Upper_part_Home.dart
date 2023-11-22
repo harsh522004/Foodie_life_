@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:foodei_life/Common/serch_bar.dart';
+import '../Common/serch_bar.dart';
 import 'package:foodei_life/Provider/User_Data_Provider.dart';
 
-import 'package:foodei_life/constant/images.dart';
-import 'package:foodei_life/theme/colors.dart';
+import '../theme/colors.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:google_fonts/google_fonts.dart';
 

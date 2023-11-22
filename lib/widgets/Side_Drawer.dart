@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodei_life/Common/List_tile.dart';
+import 'package:foodei_life/Provider/Favouirte_Meal_Provider.dart';
+import 'package:foodei_life/screens/Meals_Screen.dart';
 
 import 'package:foodei_life/theme/colors.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
@@ -13,11 +15,16 @@ class SideDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    void _savedMealsNavigation(){
+        final favMeals = ref.watch(favoriteMealsProvider);
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (ctx) => MealsScreen(mealsList: favMeals,title: 'Saved Meals',)));
+    }
     final userData = ref.watch(userDataProvider);
     return userData.when(
         data: (data) {
           if (data != null) {
-
             String userImage = data['imageUrl']!;
             String userName = data['username'];
             return GFDrawer(
@@ -62,7 +69,7 @@ class SideDrawer extends ConsumerWidget {
                   CustomListTile(
                     icon: Icons.save,
                     title: 'Saved Meals',
-                    onTap: () {},
+                    onTap: _savedMealsNavigation,
                   ),
                   CustomListTile(
                     icon: Icons.restaurant,

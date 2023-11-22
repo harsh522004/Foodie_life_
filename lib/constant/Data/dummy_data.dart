@@ -1,55 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:foodei_life/Models/Meals.dart';
-import 'package:foodei_life/Models/category.dart';
+import 'package:foodei_life/Models/Category_Model.dart';
 import 'package:foodei_life/constant/images.dart';
 
-List<Category> availableCategories = [
-  Category(
+
+List<CategoryModel> availableCategories = [
+  CategoryModel(
     categoryImage: const AssetImage(hItalianImage),
     id: 'c1',
     title: 'Italian',
   ),
-  Category(
+  CategoryModel(
     categoryImage: const AssetImage(hQuickImage),
     id: 'c2',
     title: 'Quick & Easy',
   ),
-  Category(
+  CategoryModel(
     categoryImage: const AssetImage(hHamburgersImage),
     id: 'c3',
     title: 'Hamburgers',
   ),
-  Category(
+  CategoryModel(
     categoryImage: const AssetImage(hGermanImage),
     id: 'c4',
     title: 'German',
   ),
-  Category(
+  CategoryModel(
     categoryImage: const AssetImage(hLightImage),
     id: 'c5',
     title: 'Light & Lovely',
   ),
-  Category(
+  CategoryModel(
     categoryImage: const AssetImage(hExoticImage),
     id: 'c6',
     title: 'Exotic',
   ),
-  Category(
+  CategoryModel(
     categoryImage: const AssetImage(hBreakfastImage),
     id: 'c7',
     title: 'Breakfast',
   ),
-  Category(
+  CategoryModel(
     categoryImage: const AssetImage(hAsianImage),
     id: 'c8',
     title: 'Asian ',
   ),
-  Category(
+  CategoryModel(
     categoryImage: const AssetImage(hFrenchImage),
     id: 'c9',
     title: 'French',
   ),
-  Category(
+  CategoryModel(
     categoryImage: const AssetImage(hSummerImage),
     id: 'c10',
     title: 'Summer',

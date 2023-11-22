@@ -1,42 +1,51 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-import 'package:foodei_life/Provider/Filter_Provider.dart';
-import 'package:foodei_life/constant/Data/dummy_data.dart';
-import 'package:foodei_life/screens/Home_Screen.dart';
-import 'package:foodei_life/theme/colors.dart';
-import 'package:foodei_life/widgets/set_Filter.dart';
 
-const kIntialFilters = {
+
+import '../Provider/Filter_Provider.dart';
+import 'package:foodei_life/screens/Home_Screen.dart';
+import '../widgets/set_Filter.dart';
+import '../theme/colors.dart';
+
+
+const kInitialFilters = {
   FilterMap.glutenFree: false,
   FilterMap.lactoseFree: false,
   FilterMap.Veg: false,
   FilterMap.Vegan: false,
 };
 
-class TabsScreen extends StatefulWidget {
-  const TabsScreen({super.key});
+class TabsScreen extends ConsumerStatefulWidget {
+  const TabsScreen({Key? key}) : super(key: key);
 
   @override
-  State<TabsScreen> createState() => _TabsScreenState();
+  _TabsScreenState createState() => _TabsScreenState();
 }
 
-class _TabsScreenState extends State<TabsScreen> {
-  int _selectPageIndex = 0;
+class _TabsScreenState extends ConsumerState<TabsScreen> {
+  int _selectedPageIndex = 0;
 
   void _selectPage(int index) {
     setState(() {
-      _selectPageIndex = index;
+      _selectedPageIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    const avalaibleMeal = dummyMeals;
+    final availableMeal = ref.watch(filterMealsProvider);
+
+
+    // Logic for Favorite Meals
+   /* final favMeals = ref.watch(favoriteMealsProvider);
+    activePage = CategoryMeals(
+      meals: favMeals,
+    );*/
+
     Widget activePage(int index) {
       switch (index) {
         case 0:
-          return const HomeScreen(
-            avalaibleMeal: avalaibleMeal,
-          );
+          return HomeScreen(avalaibleMeal: availableMeal);
         case 2:
           return const Filter();
         default:
@@ -45,15 +54,13 @@ class _TabsScreenState extends State<TabsScreen> {
     }
 
     return Scaffold(
-      body: activePage(_selectPageIndex),
+      body: activePage(_selectedPageIndex),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectPageIndex,
+        currentIndex: _selectedPageIndex,
         onTap: _selectPage,
         elevation: 0,
         type: BottomNavigationBarType.fixed,
-        // Use fixed type to keep the buttons visible
         showSelectedLabels: false,
-        // You can configure label visibility as needed
         showUnselectedLabels: false,
         items: <BottomNavigationBarItem>[
           const BottomNavigationBarItem(

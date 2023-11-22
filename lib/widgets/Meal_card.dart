@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:foodei_life/widgets/Below_Meals.dart';
 import 'package:transparent_image/transparent_image.dart';
 
+
+import '../widgets/Below_Meals.dart';
 import '../Models/Meals.dart';
 import '../screens/Recipe_Final.dart';
+
 
 class MealCard extends StatelessWidget {
   const MealCard(@required this.meals, {super.key});

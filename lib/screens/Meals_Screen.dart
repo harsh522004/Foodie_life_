@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:foodei_life/theme/colors.dart';
-import '../widgets/Meal_card.dart';
-
 import '../Models/Meals.dart';
-
+import '../widgets/Meal_card.dart';
+import '../theme/colors.dart';
 
 class MealsScreen extends StatelessWidget {
   const MealsScreen(

@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:foodei_life/Models/category.dart';
+import 'package:foodei_life/Models/Category_Model.dart';
 
-class CustomCard extends StatelessWidget {
-  const CustomCard({
+
+class CategoryCard extends StatelessWidget {
+  const CategoryCard({
     Key? key,
     required this.onTap,
-    required this.category,
+    required this.selectedCategory,
   }) : super(key: key);
 
   // Change the type to AssetImage
-  final Category category;
+  final CategoryModel selectedCategory;
   final VoidCallback onTap;
 
   @override
@@ -36,7 +37,7 @@ class CustomCard extends StatelessWidget {
                 height: double.infinity,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: category.categoryImage, // Use AssetImage here
+                    image: selectedCategory.categoryImage, // Use AssetImage here
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -49,7 +50,7 @@ class CustomCard extends StatelessWidget {
                   padding: const EdgeInsets.all(7),
                   color: Colors.black.withOpacity(0.4),
                   child: Text(
-                    category.title,
+                    selectedCategory.title,
                     style: const TextStyle(
                       color: Colors.white, // Set the text color to white
                       fontSize: 20,
