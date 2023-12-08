@@ -14,7 +14,7 @@ enum Affordability {
 
 class MealModel {
   const MealModel({
-    required this.id,
+    this.id,
     required this.categories,
     required this.title,
     required this.imageUrl,
@@ -29,7 +29,7 @@ class MealModel {
     required this.isVegetarian,
   });
 
-  final String id;
+  final String? id;
   final List<String> categories;
   final String title;
   final String imageUrl;

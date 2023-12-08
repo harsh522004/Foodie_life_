@@ -1,17 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:foodei_life/Models/Category_Model.dart';
-
+import 'package:foodei_life/Models/Meals.dart';
+import 'package:foodei_life/constant/Data/dummy_data.dart';
+import 'package:foodei_life/screens/Meals_Screen.dart';
+import 'package:foodei_life/widgets/Category_Card.dart';
+import 'package:foodei_life/widgets/Side_Drawer.dart';
+import 'package:foodei_life/widgets/Upper_part_Home.dart';
 
 // Import your search bar widget
-import '../Models/Meals.dart';
-
-import './Meals_Screen.dart';
-import '../widgets/Side_Drawer.dart';
-import '../widgets/Upper_part_Home.dart';
-import '../widgets/Category_Card.dart';
-
-import '../constant/Data/dummy_data.dart';
 
 // Import your NavigationButton widget
 

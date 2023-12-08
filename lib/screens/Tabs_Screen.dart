@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:foodei_life/screens/New_Meal_Add.dart';
 
 
 import '../Provider/Filter_Provider.dart';
@@ -36,16 +37,14 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
     final availableMeal = ref.watch(filterMealsProvider);
 
 
-    // Logic for Favorite Meals
-   /* final favMeals = ref.watch(favoriteMealsProvider);
-    activePage = CategoryMeals(
-      meals: favMeals,
-    );*/
+
 
     Widget activePage(int index) {
       switch (index) {
         case 0:
           return HomeScreen(avalaibleMeal: availableMeal);
+        case 1:
+          return const AddRecipeScreen();
         case 2:
           return const Filter();
         default:

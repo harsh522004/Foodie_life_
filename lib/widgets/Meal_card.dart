@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:foodei_life/Models/Meals.dart';
+import 'package:foodei_life/screens/Recipe_Final.dart';
+import 'package:foodei_life/widgets/Below_Meals.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 
-import '../widgets/Below_Meals.dart';
-import '../Models/Meals.dart';
-import '../screens/Recipe_Final.dart';
 
 
 class MealCard extends StatelessWidget {
@@ -16,8 +16,6 @@ class MealCard extends StatelessWidget {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (ctx) => RecipeFinal(meals)));
   }
-
-  //final void Function() onselectcategory = ;
 
   String get complexityText {
     return meals.complexity.name[0].toUpperCase() +
@@ -40,7 +38,7 @@ class MealCard extends StatelessWidget {
         child: Stack(
           children: [
             Hero(
-              tag: meals.id,
+              tag: meals.id??'',
               child: FadeInImage(
                 image: NetworkImage(meals.imageUrl),
                 placeholder: MemoryImage(kTransparentImage),

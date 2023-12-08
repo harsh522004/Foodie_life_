@@ -215,7 +215,7 @@ class RecipeFinal extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(9),
                   ),
                   child: Hero(
-                    tag: meal.id,
+                    tag: meal.id ?? '',
                     child: Image.network(
                       meal.imageUrl,
                       width: double.infinity,
