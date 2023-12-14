@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:foodei_life/Models/Category_Model.dart';
 import 'package:foodei_life/Models/Meals.dart';
@@ -21,7 +23,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   String _title = '';
   String _imageUrl = '';
   final CategoryModel _category = availableCategories[0];
-  List<String> _categories = [availableCategories[0].id];
+  late  List<String> _categories = [availableCategories[0].id];
   List<String> _ingredients = [];
   List<String> _steps = [];
   int _duration = 0;
@@ -32,17 +34,49 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   bool _isVegan = false;
   bool _isVegetarian = false;
 
+  Future<void> addRecipeToFirestore(MealModel mealModel) async {
+    try {
+      // Get the current user
+      User? user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // Firestore collection reference for recipes
+        CollectionReference recipesCollection =
+        FirebaseFirestore.instance.collection('recipes');
+
+        // Add recipe data to Firestore
+        await recipesCollection.add({
+          'userId': user.uid, // Add the user ID
+          'categories': mealModel.categories,
+          'title': mealModel.title,
+          'imageUrl': mealModel.imageUrl,
+          'ingredients': mealModel.ingredients,
+          'steps': mealModel.steps,
+          'duration': mealModel.duration,
+          'complexity': mealModel.complexity.toString().split('.').last,
+          'affordability': mealModel.affordability.toString().split('.').last,
+          'isGlutenFree': mealModel.isGlutenFree,
+          'isLactoseFree': mealModel.isLactoseFree,
+          'isVegan': mealModel.isVegan,
+          'isVegetarian': mealModel.isVegetarian,
+        });
+
+        // Successfully added to Firestore
+        print('Recipe added to Firestore successfully!');
+      } else {
+        // User not logged in
+        throw Exception('User Not Logged in.');
+      }
+    } catch (e) {
+      // Handle errors
+      print('Error adding recipe to Firestore: $e');
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    /*Future<void> _pickImage() async {
-      final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
 
-      if (pickedFile != null) {
-        setState(() {
-          _imageUrl = pickedFile.path;
-        });
-      }
-    }*/
 
     return Scaffold(
       appBar: AppBar(
@@ -54,19 +88,6 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
           key: _formKey,
           child: ListView(
             children: [
-              // ID Input (You might want to generate this)
-              /*TextFormField(
-                decoration: const InputDecoration(labelText: 'ID'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a valid ID';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _id = value!;
-                },
-              ),*/
 
               // Title Input
               TextFormField(
@@ -83,7 +104,22 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
               ),
 
               // Categories Dropdown
-              
+              // Categories Dropdown
+              // Categories Dropdown
+              MultiSelectDialogField<CategoryModel>(
+                items: availableCategories
+                    .map((category) => MultiSelectItem<CategoryModel>(category, category.title))
+                    .toList(),
+                listType: MultiSelectListType.CHIP,
+                onConfirm: (values) {
+                  setState(() {
+                    _categories = values.map((category) => category.id).toList();
+                  });
+                },
+              ),
+
+
+
               // Ingredients Input
               TextFormField(
                 maxLines: null,
@@ -137,24 +173,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                 },
               ),
 
-              // Duration Input
-              TextFormField(
-                keyboardType: TextInputType.number,
-                decoration:
-                    const InputDecoration(labelText: 'Duration (minutes)'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a duration';
-                  }
-                  if (int.tryParse(value) == null) {
-                    return 'Please enter a valid number';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _duration = int.parse(value!);
-                },
-              ),
+
 
               // complexity
               DropdownButtonFormField<Complexity>(
@@ -282,6 +301,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
         isLactoseFree: _isLactoseFree,
         isVegan: _isVegan,
         isVegetarian: _isVegetarian);
+    addRecipeToFirestore(mealModel);
     // Create a new instance of the recipe model and add it to the data source
     // Update UI to reflect the new recipe
     // Navigator.pop(context); // Navigate back to the home screen, if needed

@@ -22,6 +22,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   void _selectedCategory(BuildContext context, CategoryModel selectedCategory) {
     final filterMeals = widget.avalaibleMeal
         .where((meal) => meal.categories.contains(selectedCategory.id))
@@ -35,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("Building HomeScreen");
     GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
     return SafeArea(

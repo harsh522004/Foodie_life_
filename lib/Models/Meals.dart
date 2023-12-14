@@ -42,4 +42,27 @@ class MealModel {
   final bool isLactoseFree;
   final bool isVegan;
   final bool isVegetarian;
+  factory MealModel.fromFirestore(Map<String, dynamic> data) {
+    return MealModel(
+      id: data['id'],
+      categories: List<String>.from(data['categories']),
+      title: data['title'],
+      imageUrl: data['imageUrl'],
+      ingredients: List<String>.from(data['ingredients']),
+      steps: List<String>.from(data['steps']),
+      duration: data['duration'],
+      complexity: Complexity.values.firstWhere(
+            (e) => e.toString() == 'Complexity.${data['complexity']}',
+      ),
+      affordability: Affordability.values.firstWhere(
+            (e) => e.toString() == 'Affordability.${data['affordability']}',
+      ),
+      isGlutenFree: data['isGlutenFree'],
+      isLactoseFree: data['isLactoseFree'],
+      isVegan: data['isVegan'],
+      isVegetarian: data['isVegetarian'],
+    );
+  }
+
+
 }

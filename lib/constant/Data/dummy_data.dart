@@ -56,6 +56,7 @@ List<CategoryModel> availableCategories = [
     title: 'Summer',
   ),
 ];
+//const dummyMeals = [];
 
 const dummyMeals = [
   MealModel(
@@ -407,3 +408,4 @@ const dummyMeals = [
     isLactoseFree: true,
   ),
 ];
+
