@@ -1,43 +1,43 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodei_life/Models/Category_Model.dart';
 import 'package:foodei_life/Models/Meals.dart';
-import 'package:foodei_life/constant/Data/dummy_data.dart';
 import 'package:foodei_life/screens/Meals_Screen.dart';
 import 'package:foodei_life/widgets/Category_Card.dart';
 import 'package:foodei_life/widgets/Side_Drawer.dart';
 import 'package:foodei_life/widgets/Upper_part_Home.dart';
 
-// Import your search bar widget
+import '../Provider/Filter_Provider.dart';
+import '../constant/Data/dummy_data.dart';
 
-// Import your NavigationButton widget
-
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, required this.avalaibleMeal});
-
-  final List<MealModel> avalaibleMeal;
+class HomeScreen extends ConsumerStatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  void _selectedCategory(BuildContext context, CategoryModel selectedCategory) {
-    final filterMeals = widget.avalaibleMeal
-        .where((meal) => meal.categories.contains(selectedCategory.id))
-        .toList();
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (ctx) => MealsScreen(
-              title: selectedCategory.title,
-              mealsList: filterMeals,
-            )));
-  }
+
+
 
   @override
   Widget build(BuildContext context) {
+
+    // final availableMeal = ref.watch(filterMealsProvider);
+    // void _selectedCategory(BuildContext context, CategoryModel selectedCategory) async {
+    //   final filterMeals =
+    //   Navigator.of(context).push(MaterialPageRoute(
+    //     builder: (ctx) => MealsScreen(
+    //       title: selectedCategory.title,
+    //       mealsList: mealsList,
+    //     ),
+    //   ));
+    // }
+
     print("Building HomeScreen");
-    GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
     return SafeArea(
       child: Scaffold(
@@ -51,8 +51,6 @@ class _HomeScreenState extends State<HomeScreen> {
               HomeAboveContent(
                 openDrawerCallback: () {
                   _scaffoldKey.currentState!.openEndDrawer();
-
-                  // Define the logic to open the sidebar here
                 },
                 scaffoldKey: _scaffoldKey,
               ),
@@ -68,23 +66,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       GridView.builder(
                         gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2, // 2 columns
-                          crossAxisSpacing: 16.0, // Add horizontal spacing
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16.0,
                           mainAxisSpacing: 16.0,
                         ),
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-
-                        // List of categories in Data
                         itemCount: availableCategories.length,
                         itemBuilder: (context, index) {
                           final selectedCategory = availableCategories[index];
                           return CategoryCard(
-                              onTap: () {
-                                _selectedCategory(context, selectedCategory);
-                              },
-                              selectedCategory: selectedCategory);
+                            onTap: () {
+                              _selectedCategory(context, selectedCategory);
+                            },
+                            selectedCategory: selectedCategory,
+                          );
                         },
                       ),
                     ],
@@ -93,11 +90,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
 
               // Lower Part (Navigation Buttons)
-              //const NavigationButton(),
+              // const NavigationButton(),
             ],
           ),
         ),
-        //),
       ),
     );
   }

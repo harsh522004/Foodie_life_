@@ -33,13 +33,13 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final availableMeal = ref.watch(filterMealsProvider);
+    //final availableMeal = ref.watch(filterMealsProvider);
 
 
     Widget activePage(int index) {
       switch (index) {
         case 0:
-          return HomeScreen(avalaibleMeal: availableMeal);
+          return HomeScreen();
 
         case 1:
           return const AddRecipeScreen();
