@@ -38,7 +38,7 @@ StateNotifierProvider<FilterNotifier, Map<FilterMap, bool>>(
         (ref) => FilterNotifier());
 
 //which return the list of filtered meals
-final filterMealsProvider = Provider((ref) async {
+final filterMealsProvider = FutureProvider<List<MealModel>>((ref) async {
   final activeFilter = ref.watch(filterProvider);
   try {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -49,34 +49,12 @@ final filterMealsProvider = Provider((ref) async {
         .where('isVegetarian', isEqualTo: activeFilter[FilterMap.Veg]).get();
 
     List<MealModel> meals = querySnapshot.docs
-    .map((doc) => MealModel.fromFirestore(doc.data() as Map<String, dynamic>) )
+        .map((doc) => MealModel.fromFirestore(doc.data() as Map<String, dynamic>))
         .toList();
 
     return meals;
-
-
-    }catch(e){
+  } catch (e) {
     print('Error fetching meals from Firestore: $e');
     return [];
-
-    }
-        // return dummyMeals.where((meal) {
-        //   if (activeFilter[FilterMap.glutenFree]! && !meal.isGlutenFree) {
-        //     return false;
-        //   }
-        //
-        //   if (activeFilter[FilterMap.lactoseFree]! && !meal.isLactoseFree) {
-        //     return false;
-        //   }
-        //
-        //   if (activeFilter[FilterMap.Veg]! && !meal.isVegetarian) {
-        //     return false;
-        //   }
-        //
-        //   if (activeFilter[FilterMap.Vegan]! && !meal.isVegan) {
-        //     return false;
-        //   }
-        //
-        //   return true;
-        // }).toList();
-    });
+  }
+});

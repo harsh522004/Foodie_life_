@@ -26,16 +26,33 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
 
-    // final availableMeal = ref.watch(filterMealsProvider);
-    // void _selectedCategory(BuildContext context, CategoryModel selectedCategory) async {
-    //   final filterMeals =
-    //   Navigator.of(context).push(MaterialPageRoute(
-    //     builder: (ctx) => MealsScreen(
-    //       title: selectedCategory.title,
-    //       mealsList: mealsList,
-    //     ),
-    //   ));
-    // }
+    final availableMeal = ref.read(filterMealsProvider);
+    void _selectedCategory(BuildContext context, CategoryModel selectedCategory) {
+      final AsyncValue<List<MealModel>> filterMeals = ref.read(filterMealsProvider);
+
+      filterMeals.when(
+        data: (meals) {
+          final filteredList = meals
+              .where((meal) => meal.categories.contains(selectedCategory.id))
+              .toList();
+
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (ctx) => MealsScreen(
+              title: selectedCategory.title,
+              mealsList: filteredList,
+            ),
+          ));
+        },
+        loading: () {
+          // Handle loading state if needed
+        },
+        error: (error, stack) {
+          // Handle error state if needed
+        },
+      );
+    }
+
+
 
     print("Building HomeScreen");
 

@@ -23,7 +23,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   String _title = '';
   String _imageUrl = '';
   final CategoryModel _category = availableCategories[0];
-  late  List<String> _categories = [availableCategories[0].id];
+  late List<String> _categories = [availableCategories[0].id];
   List<String> _ingredients = [];
   List<String> _steps = [];
   int _duration = 0;
@@ -42,7 +42,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
       if (user != null) {
         // Firestore collection reference for recipes
         CollectionReference recipesCollection =
-        FirebaseFirestore.instance.collection('recipes');
+            FirebaseFirestore.instance.collection('recipes');
 
         // Add recipe data to Firestore
         await recipesCollection.add({
@@ -73,11 +73,8 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Recipe'),
@@ -88,7 +85,6 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
           key: _formKey,
           child: ListView(
             children: [
-
               // Title Input
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Title'),
@@ -108,17 +104,17 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
               // Categories Dropdown
               MultiSelectDialogField<CategoryModel>(
                 items: availableCategories
-                    .map((category) => MultiSelectItem<CategoryModel>(category, category.title))
+                    .map((category) => MultiSelectItem<CategoryModel>(
+                        category, category.title))
                     .toList(),
                 listType: MultiSelectListType.CHIP,
                 onConfirm: (values) {
                   setState(() {
-                    _categories = values.map((category) => category.id).toList();
+                    _categories =
+                        values.map((category) => category.id).toList();
                   });
                 },
               ),
-
-
 
               // Ingredients Input
               TextFormField(
@@ -172,8 +168,6 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                   _duration = int.parse(value!);
                 },
               ),
-
-
 
               // complexity
               DropdownButtonFormField<Complexity>(
@@ -288,7 +282,10 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   }
 
   void _saveRecipe() {
-    final mealModel = MealModel(
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save(); // Add this line to save the form data
+
+      final mealModel = MealModel(
         categories: _categories,
         title: _title,
         imageUrl: _imageUrl,
@@ -300,10 +297,10 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
         isGlutenFree: _isGlutenFree,
         isLactoseFree: _isLactoseFree,
         isVegan: _isVegan,
-        isVegetarian: _isVegetarian);
-    addRecipeToFirestore(mealModel);
-    // Create a new instance of the recipe model and add it to the data source
-    // Update UI to reflect the new recipe
-    // Navigator.pop(context); // Navigate back to the home screen, if needed
+        isVegetarian: _isVegetarian,
+      );
+
+      addRecipeToFirestore(mealModel);
+    }
   }
 }
