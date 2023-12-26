@@ -27,7 +27,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
 
     final availableMeal = ref.read(filterMealsProvider);
+    availableMeal.when(
+      data: (meals) {
+        print('Available Meals: $meals');
+        // Rest of the code...
+      },
+      loading: () {
+        print('Loading...');
+      },
+      error: (error, stack) {
+        print('Error: $error');
+      },
+    );
+
     void _selectedCategory(BuildContext context, CategoryModel selectedCategory) {
+
+      print('Selected Category: ${selectedCategory.title}');
       final AsyncValue<List<MealModel>> filterMeals = ref.read(filterMealsProvider);
 
       filterMeals.when(

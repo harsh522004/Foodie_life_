@@ -5,7 +5,6 @@ import 'package:foodei_life/Models/Category_Model.dart';
 import 'package:foodei_life/Models/Meals.dart';
 import 'package:foodei_life/constant/Data/dummy_data.dart';
 import 'package:foodei_life/widgets/Image_Input.dart';
-
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class AddRecipeScreen extends StatefulWidget {
@@ -17,10 +16,13 @@ class AddRecipeScreen extends StatefulWidget {
 
 class _AddRecipeScreenState extends State<AddRecipeScreen> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _ingredientsController = TextEditingController();
+  final TextEditingController _stepsController = TextEditingController();
+  final TextEditingController _durationController = TextEditingController();
 
   // Variables to store form input
-
-  String _title = '';
+  bool _imageUrlReceived = false;
   String _imageUrl = '';
   final CategoryModel _category = availableCategories[0];
   late List<String> _categories = [availableCategories[0].id];
@@ -42,7 +44,10 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
       if (user != null) {
         // Firestore collection reference for recipes
         CollectionReference recipesCollection =
-            FirebaseFirestore.instance.collection('recipes');
+        FirebaseFirestore.instance.collection('recipes');
+        String tamp = mealModel.imageUrl;
+
+        print('Adding recipe to Firestore with imageUrl: $tamp');
 
         // Add recipe data to Firestore
         await recipesCollection.add({
@@ -74,6 +79,15 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _titleController.text = _titleController.text;
+    _ingredientsController.text = _ingredients.join('\n');
+    _stepsController.text = _steps.join('\n');
+    _durationController.text = _duration.toString();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -87,6 +101,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
             children: [
               // Title Input
               TextFormField(
+                controller: _titleController,
                 decoration: const InputDecoration(labelText: 'Title'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -95,17 +110,17 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                   return null;
                 },
                 onSaved: (value) {
-                  _title = value!;
+                  _titleController.text = value!;
                 },
               ),
 
               // Categories Dropdown
-              // Categories Dropdown
-              // Categories Dropdown
               MultiSelectDialogField<CategoryModel>(
                 items: availableCategories
                     .map((category) => MultiSelectItem<CategoryModel>(
-                        category, category.title))
+                  category,
+                  category.title,
+                ))
                     .toList(),
                 listType: MultiSelectListType.CHIP,
                 onConfirm: (values) {
@@ -118,8 +133,8 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
 
               // Ingredients Input
               TextFormField(
+                controller: _ingredientsController,
                 maxLines: null,
-                // Allow multiple lines
                 keyboardType: TextInputType.multiline,
                 decoration: const InputDecoration(labelText: 'Ingredients'),
                 validator: (value) {
@@ -135,8 +150,8 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
 
               // Steps Input
               TextFormField(
+                controller: _stepsController,
                 maxLines: null,
-                // Allow multiple lines
                 keyboardType: TextInputType.multiline,
                 decoration: const InputDecoration(labelText: 'Steps'),
                 validator: (value) {
@@ -152,9 +167,10 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
 
               // Duration
               TextFormField(
+                controller: _durationController,
                 keyboardType: TextInputType.number,
                 decoration:
-                    const InputDecoration(labelText: 'Duration (minutes)'),
+                const InputDecoration(labelText: 'Duration (minutes)'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a duration';
@@ -169,7 +185,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                 },
               ),
 
-              // complexity
+              // Complexity
               DropdownButtonFormField<Complexity>(
                 value: _selectedComplexity,
                 onChanged: (value) {
@@ -179,9 +195,9 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                 },
                 items: Complexity.values
                     .map((complexity) => DropdownMenuItem<Complexity>(
-                          value: complexity,
-                          child: Text(complexity.toString().split('.').last),
-                        ))
+                  value: complexity,
+                  child: Text(complexity.toString().split('.').last),
+                ))
                     .toList(),
                 decoration: const InputDecoration(labelText: 'Complexity'),
                 validator: (value) {
@@ -202,11 +218,13 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
                 },
                 items: Affordability.values
                     .map((affordability) => DropdownMenuItem<Affordability>(
-                          value: affordability,
-                          child: Text(affordability.toString().split('.').last),
-                        ))
+                  value: affordability,
+                  child: Text(
+                      affordability.toString().split('.').last),
+                ))
                     .toList(),
-                decoration: const InputDecoration(labelText: 'Affordability'),
+                decoration:
+                const InputDecoration(labelText: 'Affordability'),
                 validator: (value) {
                   if (value == null) {
                     return 'Please select an affordability';
@@ -257,17 +275,25 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
               ),
 
               // Image URL Input
-              ImageInput(
-                onPickImage: (image) {
-                  _imageUrl = image.path;
-                },
-              ),
+              // Image URL Input
+              ImageInput(onPickImage: (imageUrl){
+                print('Received imageUrl: $imageUrl');
+                setState(() {
+                   _imageUrl = imageUrl;
+                   _imageUrlReceived = true;
+                });
+
+              }),
+
 
               // Elevated Button
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   // Validate form
                   if (_formKey.currentState!.validate()) {
+                    while (!_imageUrlReceived) {
+                      await Future.delayed(const Duration(milliseconds: 100));
+                    }
                     // Save the recipe and update UI
                     _saveRecipe();
                   }
@@ -281,13 +307,23 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
     );
   }
 
-  void _saveRecipe() {
+  Future<void> _saveRecipe() async {
     if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save(); // Add this line to save the form data
+      if (_imageUrl.isEmpty) {
+        // Handle the case when imageUrl is empty
+        print('Image URL is empty. Recipe not saved.');
+        return;
+      }
+
+      // Wait for the imageUrl to be updated
+
+      _formKey.currentState!.save();
+
+      print('Set Image Url is : $_imageUrl' );
 
       final mealModel = MealModel(
         categories: _categories,
-        title: _title,
+        title: _titleController.text,
         imageUrl: _imageUrl,
         ingredients: _ingredients,
         steps: _steps,

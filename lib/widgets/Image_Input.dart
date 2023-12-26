@@ -1,4 +1,5 @@
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,7 +9,7 @@ import 'package:image_picker/image_picker.dart';
 class ImageInput extends StatefulWidget {
   const ImageInput({super.key, required this.onPickImage});
 
-  final void Function(File image) onPickImage;
+  final void Function(String imageUrl) onPickImage;
 
   @override
   State<ImageInput> createState() => _ImageInputState();
@@ -29,12 +30,23 @@ class _ImageInputState extends State<ImageInput> {
     setState(() {
       _selectedImage = File(pickedImage.path);
     });
-    widget.onPickImage(_selectedImage!);
+
+    User? user = FirebaseAuth.instance.currentUser;
+    if(user != null){
+      final storageRef = FirebaseStorage.instance.ref().child('recipe_image').child('${user.uid}.jpg');
+      await storageRef.putFile(_selectedImage!);
+
+      final imageUrl = await storageRef.getDownloadURL() ;
+      widget.onPickImage(imageUrl);
+    }else{
+      print('user not Logged in');
+    }
 
 
   }
   @override
   Widget build(BuildContext context) {
+
 
 
 
@@ -61,3 +73,5 @@ class _ImageInputState extends State<ImageInput> {
     );
   }
 }
+
+
