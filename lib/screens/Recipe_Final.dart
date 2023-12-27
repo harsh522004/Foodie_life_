@@ -130,22 +130,27 @@ class RecipeFinal extends ConsumerWidget {
   }
 }
 */
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:foodei_life/Models/Meals.dart';
+import 'package:flutter/material.dart';
 
+import '../Models/Meals.dart';
 import '../Provider/Favouirte_Meal_Provider.dart';
+import '../Provider/database_manager.dart';
 import '../theme/colors.dart';
-
 class RecipeFinal extends ConsumerWidget {
-  const RecipeFinal(@required this.meal, {super.key});
+  const RecipeFinal(this.meal, {super.key});
 
   final MealModel meal;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mealsList = ref.watch(favoriteMealsProvider);
-    bool isSaved = mealsList.contains(meal);
+    bool isSaved = ref.watch(favoriteMealsProvider).contains(meal);
+
+    Future<List<MealModel>> getFavoriteMeals() async {
+      final databaseManager = DatabaseManager.instance;
+      final favoriteMeals = await databaseManager.getFavoriteMeals();
+      return favoriteMeals.map((e) => MealModel.fromFirestore(e)).toList();
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -153,10 +158,10 @@ class RecipeFinal extends ConsumerWidget {
         title: Text(meal.title),
         actions: [
           IconButton(
-            onPressed: () {
-              final wasAdded = ref
-                  .read(favoriteMealsProvider.notifier)
-                  .toggleMealFavoriteStatus(meal);
+            onPressed: () async {
+              final wasAdded =
+              ref.read(favoriteMealsProvider.notifier).toggleMealFavoriteStatus(meal);
+
               ScaffoldMessenger.of(context).clearSnackBars();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -165,6 +170,10 @@ class RecipeFinal extends ConsumerWidget {
                       : 'Meal removed successfully'),
                 ),
               );
+
+              // Fetch updated list of favorite meals after toggling
+              final favoriteMeals = await getFavoriteMeals();
+              isSaved = favoriteMeals.contains(meal);
             },
             icon: AnimatedSwitcher(
               duration: const Duration(milliseconds: 300),
@@ -183,8 +192,6 @@ class RecipeFinal extends ConsumerWidget {
         ],
       ),
       body: Card(
-        //shadowColor: Colors.amber,
-
         elevation: 5,
         margin: const EdgeInsets.all(10),
         shape: RoundedRectangleBorder(
@@ -226,33 +233,8 @@ class RecipeFinal extends ConsumerWidget {
                 ),
                 const SizedBox(height: 10),
 
-                // title
-                _buildSectionTitle(context, "Ingredients"),
-
-                // list
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  const SizedBox(height: 15),
-                  for (final ingredient in meal.ingredients)
-                    _buildListText(
-                        context, '• $ingredient', Colors.black54, TextAlign.end),
-                  const SizedBox(height: 10),
-                ]),
-
-
-                //title
-                _buildSectionTitle(context, "Steps"),
-                const SizedBox(height: 15),
-
-
-                // list
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    for (final step in meal.steps)
-                      _buildListText(
-                          context, step, Colors.black54, TextAlign.center),
-                  ],
-                ),
+                _buildSection(context, "Ingredients", meal.ingredients),
+                _buildSection(context, "Steps", meal.steps),
               ],
             ),
           ),
@@ -261,13 +243,30 @@ class RecipeFinal extends ConsumerWidget {
     );
   }
 
+  Widget _buildSection(BuildContext context, String title, List<String> items) {
+    return Column(
+      children: [
+        _buildSectionTitle(context, title),
+        const SizedBox(height: 15),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final item in items)
+              _buildListText(context, '• $item', Colors.black54, TextAlign.end),
+            const SizedBox(height: 10),
+          ],
+        ),
+      ],
+    );
+  }
+
   Widget _buildSectionTitle(BuildContext context, String title) {
     return Text(
       title,
       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+      ),
     );
   }
 
@@ -276,10 +275,9 @@ class RecipeFinal extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Text(
-        '-> $text',
+        text,
         textAlign: textAlign,
-        style:
-            Theme.of(context).textTheme.titleSmall?.copyWith(color: textColor),
+        style: Theme.of(context).textTheme.titleSmall?.copyWith(color: textColor),
       ),
     );
   }

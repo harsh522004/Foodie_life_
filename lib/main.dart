@@ -4,10 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:foodei_life/features/landing/landing_screen.dart';
 import 'package:foodei_life/screens/Tabs_Screen.dart';
+import 'Provider/database_manager.dart';
 import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await DatabaseManager.instance.initializeDatabase();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
