@@ -1,20 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodei_life/Models/Category_Model.dart';
 import 'package:foodei_life/Models/Meals.dart';
 import 'package:foodei_life/constant/Data/dummy_data.dart';
 import 'package:foodei_life/widgets/Image_Input.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 
-class AddRecipeScreen extends StatefulWidget {
+import '../Provider/Filter_Provider.dart';
+
+class AddRecipeScreen extends ConsumerStatefulWidget {
   const AddRecipeScreen({Key? key}) : super(key: key);
 
   @override
   _AddRecipeScreenState createState() => _AddRecipeScreenState();
 }
 
-class _AddRecipeScreenState extends State<AddRecipeScreen> {
+class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _ingredientsController = TextEditingController();
@@ -47,6 +50,9 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
         FirebaseFirestore.instance.collection('recipes');
         String tamp = mealModel.imageUrl;
 
+        String timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
+        String imageUrl = '$tamp?timestamp=$timeStamp';
+
         print('Adding recipe to Firestore with imageUrl: $tamp');
 
         // Add recipe data to Firestore
@@ -54,7 +60,7 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
           'userId': user.uid, // Add the user ID
           'categories': mealModel.categories,
           'title': mealModel.title,
-          'imageUrl': mealModel.imageUrl,
+          'imageUrl': imageUrl,
           'ingredients': mealModel.ingredients,
           'steps': mealModel.steps,
           'duration': mealModel.duration,
@@ -68,13 +74,21 @@ class _AddRecipeScreenState extends State<AddRecipeScreen> {
 
         // Successfully added to Firestore
         print('Recipe added to Firestore successfully!');
+        ref.refresh(filterMealsProvider);
+
       } else {
         // User not logged in
         throw Exception('User Not Logged in.');
       }
     } catch (e) {
+      print("Error occur : $e");
       // Handle errors
-      print('Error adding recipe to Firestore: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error adding recipe to Firestore: $e'),
+          duration: const Duration(seconds: 5),
+        ),
+      );
     }
   }
 

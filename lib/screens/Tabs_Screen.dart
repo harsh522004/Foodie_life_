@@ -1,12 +1,12 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:foodei_life/Models/Meals.dart';
-import 'package:foodei_life/screens/New_Meal_Add.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../Provider/Filter_Provider.dart';
-import 'package:foodei_life/screens/Home_Screen.dart';
-import '../widgets/set_Filter.dart';
 import '../theme/colors.dart';
+import '../widgets/set_Filter.dart';
+import 'Home_Screen.dart';
+import 'New_Meal_Add.dart';
 
 const kInitialFilters = {
   FilterMap.glutenFree: false,
@@ -33,13 +33,13 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //final availableMeal = ref.watch(filterMealsProvider);
+//final availableMeal = ref.watch(filterMealsProvider);
 
 
     Widget activePage(int index) {
       switch (index) {
         case 0:
-          return HomeScreen();
+          return const HomeScreen();
 
         case 1:
           return const AddRecipeScreen();

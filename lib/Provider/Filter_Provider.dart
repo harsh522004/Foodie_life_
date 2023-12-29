@@ -44,7 +44,7 @@ final filterMealsProvider = FutureProvider<List<MealModel>>((ref) async {
     QuerySnapshot querySnapshot;
 
     if (activeFilter.containsValue(true)) {
-      // If any filter is true, apply filters
+// If any filter is true, apply filters
       print('Applying filters: $activeFilter');
 
 
@@ -55,7 +55,7 @@ final filterMealsProvider = FutureProvider<List<MealModel>>((ref) async {
           .where('isVegan', isEqualTo: activeFilter[FilterMap.Vegan])
           .where('isVegetarian', isEqualTo: activeFilter[FilterMap.Veg]).get();
     } else {
-      // If all filters are false, retrieve all recipes
+// If all filters are false, retrieve all recipes
       print('No filters applied. Retrieving all recipes.');
       querySnapshot = await FirebaseFirestore.instance
           .collection('recipes')
@@ -78,7 +78,7 @@ final filterMealsProvider = FutureProvider<List<MealModel>>((ref) async {
     return meals;
   } catch (e) {
     print('Error fetching meals from Firestore: $e');
+    throw Exception('Error fetching meals: $e');
     return [];
   }
 });
-

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:foodei_life/Models/Category_Model.dart';
-import 'package:foodei_life/Models/Meals.dart';
-import 'package:foodei_life/screens/Meals_Screen.dart';
-import 'package:foodei_life/widgets/Category_Card.dart';
-import 'package:foodei_life/widgets/Side_Drawer.dart';
-import 'package:foodei_life/widgets/Upper_part_Home.dart';
 
+import '../Models/Category_Model.dart';
+import '../Models/Meals.dart';
 import '../Provider/Filter_Provider.dart';
 import '../constant/Data/dummy_data.dart';
+import '../widgets/Category_Card.dart';
+import '../widgets/Side_Drawer.dart';
+import '../widgets/Upper_part_Home.dart';
+import 'Meals_Screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -20,37 +20,37 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-
-
-
   @override
   Widget build(BuildContext context) {
+    print("Building HomeScreen");
 
-    final availableMeal = ref.read(filterMealsProvider);
+    final availableMeal = ref.watch(filterMealsProvider);
     availableMeal.when(
       data: (meals) {
         print('Available Meals: $meals');
         // Rest of the code...
       },
       loading: () {
-        print('Loading...');
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
       },
       error: (error, stack) {
         print('Error: $error');
       },
     );
 
-    void _selectedCategory(BuildContext context, CategoryModel selectedCategory) {
-
-      print('Selected Category: ${selectedCategory.title}');
-      final AsyncValue<List<MealModel>> filterMeals = ref.read(filterMealsProvider);
-
-      filterMeals.when(
+    void _selectedCategory(
+        BuildContext context, CategoryModel selectedCategory) {
+      // Declare the filterMealsProvider variable with null
+      ref.watch(filterMealsProvider).when(
         data: (meals) {
           final filteredList = meals
-              .where((meal) => meal.categories.contains(selectedCategory.id))
+              .where(
+                  (element) => element.categories.contains(selectedCategory.id))
               .toList();
 
+          // Use the filterMealsProvider in the navigation
           Navigator.of(context).push(MaterialPageRoute(
             builder: (ctx) => MealsScreen(
               title: selectedCategory.title,
@@ -59,17 +59,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ));
         },
         loading: () {
-          // Handle loading state if needed
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         },
         error: (error, stack) {
           // Handle error state if needed
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error: $error'),
+              duration: const Duration(seconds: 5),
+            ),
+          );
         },
       );
     }
-
-
-
-    print("Building HomeScreen");
 
     return SafeArea(
       child: Scaffold(
@@ -98,7 +102,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     children: [
                       GridView.builder(
                         gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           crossAxisSpacing: 16.0,
                           mainAxisSpacing: 16.0,

@@ -33,11 +33,23 @@ class _ImageInputState extends State<ImageInput> {
 
     User? user = FirebaseAuth.instance.currentUser;
     if(user != null){
-      final storageRef = FirebaseStorage.instance.ref().child('recipe_image').child('${user.uid}.jpg');
-      await storageRef.putFile(_selectedImage!);
+      try{
+        final storageRef = FirebaseStorage.instance.ref().child('recipe_image').child('${user.uid}_${DateTime.now().microsecondsSinceEpoch}.jpg');
+        await storageRef.putFile(_selectedImage!);
 
-      final imageUrl = await storageRef.getDownloadURL() ;
-      widget.onPickImage(imageUrl);
+        final imageUrl = await storageRef.getDownloadURL() ;
+        widget.onPickImage(imageUrl);
+
+      }catch(e){
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error uploading Image: $e'),
+            duration: const Duration(seconds: 5),
+          ),
+        );
+        print('Error uploading Image: $e');
+      }
+
     }else{
       print('user not Logged in');
     }
