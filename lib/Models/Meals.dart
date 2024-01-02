@@ -14,7 +14,7 @@ enum Affordability {
 
 class MealModel {
   const MealModel({
-    this.id,
+    required this.id,
     required this.categories,
     required this.title,
     required this.imageUrl,
@@ -29,7 +29,7 @@ class MealModel {
     required this.isVegetarian,
   });
 
-  final String? id;
+  final String id;
   final List<String> categories;
   final String title;
   final String imageUrl;
@@ -42,6 +42,7 @@ class MealModel {
   final bool isLactoseFree;
   final bool isVegan;
   final bool isVegetarian;
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -59,9 +60,10 @@ class MealModel {
       'isVegetarian': isVegetarian,
     };
   }
+
   factory MealModel.fromFirestore(Map<String, dynamic> data) {
     return MealModel(
-      id: data['id'],
+      id: data['recipeId'],
       categories: List<String>.from(data['categories']),
       title: data['title'],
       imageUrl: data['imageUrl'],
@@ -69,10 +71,10 @@ class MealModel {
       steps: List<String>.from(data['steps']),
       duration: data['duration'],
       complexity: Complexity.values.firstWhere(
-            (e) => e.toString() == 'Complexity.${data['complexity']}',
+        (e) => e.toString() == 'Complexity.${data['complexity']}',
       ),
       affordability: Affordability.values.firstWhere(
-            (e) => e.toString() == 'Affordability.${data['affordability']}',
+        (e) => e.toString() == 'Affordability.${data['affordability']}',
       ),
       isGlutenFree: data['isGlutenFree'],
       isLactoseFree: data['isLactoseFree'],
@@ -80,9 +82,4 @@ class MealModel {
       isVegetarian: data['isVegetarian'],
     );
   }
-
-
-
-
 }
-

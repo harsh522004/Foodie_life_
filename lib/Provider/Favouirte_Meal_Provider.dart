@@ -1,60 +1,91 @@
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:foodei_life/Models/Meals.dart';
-// class FavoriteMealsNotifier extends StateNotifier<List<MealModel>>{
-//
-//   // difine for work of class
-//   //here it is for Meals
-//   FavoriteMealsNotifier() : super([]);
-//
-//   //Function
-//   //Get Meal and chek that it is favourite or not
-//   bool toggleMealFavoriteStatus(MealModel meal){
-//
-//     //mealIsFavorite if state contains it
-//     final mealIsFavorite = state.contains(meal);
-//
-//
-//     //if yes the remove
-//     if(mealIsFavorite){
-//       state = state.where((element) => element.id != meal.id).toList();
-//       return false;
-//     }else{
-//
-//       //if no then add meal in existing state
-//       state = [...state,meal];
-//       return true;
-//     }
-//   }// you can use this stateNotifier in provider
-// }
-// final favoriteMealsProvider = StateNotifierProvider<FavoriteMealsNotifier,List<MealModel>>((ref)  {
-//   return FavoriteMealsNotifier();
-// });
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodei_life/Models/Meals.dart';
-import 'package:foodei_life/Provider/database_manager.dart';
 
-class FavoriteMealsNotifier extends StateNotifier<List<MealModel>> {
-  final DatabaseManager _databaseManager = DatabaseManager.instance;
+import 'User_Data_Provider.dart';
 
-  FavoriteMealsNotifier() : super([]);
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:foodei_life/Models/Meals.dart';
 
-  bool toggleMealFavoriteStatus(MealModel meal) {
+class SavedRecipesProvider extends StateNotifier<List<MealModel>> {
+  SavedRecipesProvider() : super([]);
+
+  // Function to check if a recipe is already saved as a favorite
+  bool isRecipeFavorite(String recipeId) {
+    return state.any((meal) => meal.id == recipeId);
+  }
+  bool toggleMealFavoriteStatus(MealModel meal, User user) {
     final mealIsFavorite = state.contains(meal);
-
     if (mealIsFavorite) {
-      state = state.where((element) => element.id != meal.id).toList();
-      _databaseManager.deleteFavoriteMeal(meal.id!);
+      removeRecipeFromFavorites(meal, user);
       return false;
     } else {
-      state = [...state, meal];
-      _databaseManager.insertFavoriteMeal(meal.toMap()); // Assuming MealModel has a toMap method
+      addRecipeToFavorites(meal, user);
       return true;
+    }
+  }
+
+  // Function to add a recipe to the saved recipes list
+  void addRecipeToFavorites(MealModel meal, User user) {
+    state = [...state, meal];
+    updateSavedRecipesInUserDocument(state.map((meal) => meal.id).toList(), user);
+  }
+
+  // Function to remove a recipe from the saved recipes list
+  void removeRecipeFromFavorites(MealModel meal, User user) {
+    state = state.where((element) => element.id != meal.id).toList();
+    updateSavedRecipesInUserDocument(state.map((meal) => meal.id).toList(), user);
+  }
+
+  // Function to update saved recipes in user document
+  void updateSavedRecipesInUserDocument(List<String> savedRecipeIds, User user) async {
+    await FirebaseFirestore.instance.collection('User').doc(user.uid).update({
+      'savedRecipes': savedRecipeIds,
+    });
+
+    print('Saved recipes updated successfully. Recipe IDs: $savedRecipeIds');
+  }
+
+  // Function to fetch saved recipes from Firestore based on user data
+  Future<void> fetchSavedRecipes(User user) async {
+    try {
+      final userData = await FirebaseFirestore.instance.collection('User').doc(user.uid).get();
+      final List<String> savedRecipeIds = List<String>.from(userData['savedRecipes'] ?? []);
+
+      final snapshot = await FirebaseFirestore.instance.collection('recipes').where('recipeId', whereIn: savedRecipeIds).get();
+
+      final savedMeals = snapshot.docs.map((doc) {
+        final data = doc.data();
+        return MealModel(
+// Map your fields accordingly
+          id: data['recipeId'],
+          title: data['title'],
+          imageUrl: data['imageUrl'],
+          categories: List<String>.from(data['categories']),
+          ingredients: List<String>.from(data['ingredients']),
+          steps: List<String>.from(data['steps']),
+          duration: data['duration'],
+          complexity: Complexity.values.firstWhere(
+                  (e) => e.toString().split('.').last == data['complexity']),
+          affordability: Affordability.values.firstWhere(
+                  (e) => e.toString().split('.').last == data['affordability']),
+          isGlutenFree: data['isGlutenFree'],
+          isLactoseFree: data['isLactoseFree'],
+          isVegan: data['isVegan'],
+          isVegetarian: data['isVegetarian'],
+        );
+      }).toList();
+
+      state = savedMeals;
+    } catch (error) {
+      print('Error fetching saved recipes: $error');
     }
   }
 }
 
-final favoriteMealsProvider =
-StateNotifierProvider<FavoriteMealsNotifier, List<MealModel>>((ref) {
-  return FavoriteMealsNotifier();
+final savedRecipesProvider = StateNotifierProvider<SavedRecipesProvider, List<MealModel>>((ref) {
+  return SavedRecipesProvider();
 });

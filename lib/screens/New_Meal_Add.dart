@@ -7,6 +7,7 @@ import 'package:foodei_life/Models/Meals.dart';
 import 'package:foodei_life/constant/Data/dummy_data.dart';
 import 'package:foodei_life/widgets/Image_Input.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 import '../Provider/Filter_Provider.dart';
 
@@ -18,6 +19,12 @@ class AddRecipeScreen extends ConsumerStatefulWidget {
 }
 
 class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
+  // Inside your function or class
+  String generateUniqueId() {
+    var uuid = const Uuid();
+    return uuid.v4();
+  }
+
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _ingredientsController = TextEditingController();
@@ -25,6 +32,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
   final TextEditingController _durationController = TextEditingController();
 
   // Variables to store form input
+  String recipeId = '';
   bool _imageUrlReceived = false;
   String _imageUrl = '';
   final CategoryModel _category = availableCategories[0];
@@ -58,6 +66,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
         // Add recipe data to Firestore
         await recipesCollection.add({
           'userId': user.uid, // Add the user ID
+          'recipeId' : mealModel.id,
           'categories': mealModel.categories,
           'title': mealModel.title,
           'imageUrl': imageUrl,
@@ -333,9 +342,12 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
 
       _formKey.currentState!.save();
 
+      recipeId = generateUniqueId();
+
       print('Set Image Url is : $_imageUrl' );
 
       final mealModel = MealModel(
+
         categories: _categories,
         title: _titleController.text,
         imageUrl: _imageUrl,
@@ -347,7 +359,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
         isGlutenFree: _isGlutenFree,
         isLactoseFree: _isLactoseFree,
         isVegan: _isVegan,
-        isVegetarian: _isVegetarian,
+        isVegetarian: _isVegetarian, id: recipeId,
       );
 
       addRecipeToFirestore(mealModel);

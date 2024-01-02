@@ -73,6 +73,7 @@ class _AuthScreenState extends State<AuthScreen> {
           'username': _usernameController.text,
           'email': _emailController.text,
           'imageUrl': userImageUrl,
+          'savedRecipes': [],
         });
 
         _usernameController.clear();
