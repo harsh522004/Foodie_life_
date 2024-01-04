@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:foodei_life/Provider/Serch_bar_provider.dart';
+
 import '../Common/serch_bar.dart';
 import 'package:foodei_life/Provider/User_Data_Provider.dart';
 
@@ -9,11 +11,14 @@ import 'package:google_fonts/google_fonts.dart';
 
 class HomeAboveContent extends ConsumerWidget {
   final VoidCallback openDrawerCallback;
-
   final GlobalKey<ScaffoldState> scaffoldKey;
+  final TextEditingController searchController;
 
   const HomeAboveContent(
-      {super.key, required this.scaffoldKey, required this.openDrawerCallback});
+      {super.key,
+      required this.scaffoldKey,
+      required this.searchController,
+      required this.openDrawerCallback});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -22,7 +27,6 @@ class HomeAboveContent extends ConsumerWidget {
     return userData.when(
         data: (data) {
           if (data != null) {
-
             String username = data['username'];
             String userImage = data['imageUrl']!;
 
@@ -82,9 +86,14 @@ class HomeAboveContent extends ConsumerWidget {
 
                 // Search Bar
                 HSearchBar(
-                  backgroundColor: materialColor[100]!,
-                  hintText: 'Search',
-                ),
+                    backgroundColor: materialColor[100]!,
+                    hintText: 'Search',
+                    searchController: searchController,
+                    onSearchQueryChanged: (String query) {
+                      ref
+                          .read(searchProvider.notifier)
+                          .updateFilteredCategories(query);
+                    }),
               ],
             );
           } else {
