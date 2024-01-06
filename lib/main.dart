@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:foodei_life/features/landing/landing_screen.dart';
 import 'package:foodei_life/screens/Tabs_Screen.dart';
+import 'package:foodei_life/theme/colors.dart';
 
 import 'firebase_options.dart';
 
@@ -23,6 +24,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  MaterialApp(
+        theme: ThemeData(
+          primarySwatch: materialColor,
+          primaryColor: materialColor// Set your materialColor as the primary color
+          // Other theme configurations...
+        ),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       home: StreamBuilder(stream: FirebaseAuth.instance.authStateChanges(),

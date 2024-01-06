@@ -14,6 +14,8 @@ const hBreakfastImage ='assets/Breakfast.jpg';
 const hAsianImage ='assets/Asian.jpg';
 const hFrenchImage ='assets/French.jpg';
 const hSummerImage ='assets/Summer.jpg';
+const hUserImage = 'assets/User.jpg';
+const hNameImage = 'assets/Name.jpg';
 
 // tamp
 const hProfilePic = 'assets/ProfilePic.jpg';

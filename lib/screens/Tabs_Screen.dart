@@ -35,7 +35,6 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
   Widget build(BuildContext context) {
 //final availableMeal = ref.watch(filterMealsProvider);
 
-
     Widget activePage(int index) {
       switch (index) {
         case 0:
@@ -70,10 +69,10 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
                 shape: BoxShape.circle,
                 color: materialColor[400],
               ),
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(5),
               child: Icon(
                 Icons.add,
-                size: 30,
+                size: 40,
                 color: materialColor[50],
               ),
             ),

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodei_life/Models/Category_Model.dart';
 import 'package:foodei_life/Models/Meals.dart';
 import 'package:foodei_life/constant/Data/dummy_data.dart';
+import 'package:foodei_life/theme/colors.dart';
 import 'package:foodei_life/widgets/Image_Input.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -55,7 +56,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
       if (user != null) {
         // Firestore collection reference for recipes
         CollectionReference recipesCollection =
-        FirebaseFirestore.instance.collection('recipes');
+            FirebaseFirestore.instance.collection('recipes');
         String tamp = mealModel.imageUrl;
 
         String timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
@@ -66,7 +67,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
         // Add recipe data to Firestore
         await recipesCollection.add({
           'userId': user.uid, // Add the user ID
-          'recipeId' : mealModel.id,
+          'recipeId': mealModel.id,
           'categories': mealModel.categories,
           'title': mealModel.title,
           'imageUrl': imageUrl,
@@ -84,7 +85,6 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
         // Successfully added to Firestore
         print('Recipe added to Firestore successfully!');
         ref.refresh(filterMealsProvider);
-
       } else {
         // User not logged in
         throw Exception('User Not Logged in.');
@@ -125,7 +125,12 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
               // Title Input
               TextFormField(
                 controller: _titleController,
-                decoration: const InputDecoration(labelText: 'Title'),
+                decoration: InputDecoration(
+                  labelText: 'Title',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a title';
@@ -137,13 +142,15 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                 },
               ),
 
+              SizedBox(height: 10),
+
               // Categories Dropdown
               MultiSelectDialogField<CategoryModel>(
                 items: availableCategories
                     .map((category) => MultiSelectItem<CategoryModel>(
-                  category,
-                  category.title,
-                ))
+                          category,
+                          category.title,
+                        ))
                     .toList(),
                 listType: MultiSelectListType.CHIP,
                 onConfirm: (values) {
@@ -154,12 +161,19 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                 },
               ),
 
+              SizedBox(height: 10),
+
               // Ingredients Input
               TextFormField(
                 controller: _ingredientsController,
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
-                decoration: const InputDecoration(labelText: 'Ingredients'),
+                decoration: InputDecoration(
+                  labelText: 'Ingredients',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter ingredients';
@@ -171,12 +185,18 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                 },
               ),
 
+              SizedBox(height: 10),
               // Steps Input
               TextFormField(
                 controller: _stepsController,
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
-                decoration: const InputDecoration(labelText: 'Steps'),
+                decoration: InputDecoration(
+                  labelText: 'Steps',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter steps';
@@ -187,13 +207,17 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   _steps = value!.split('\n');
                 },
               ),
-
+              SizedBox(height: 10),
               // Duration
               TextFormField(
                 controller: _durationController,
                 keyboardType: TextInputType.number,
-                decoration:
-                const InputDecoration(labelText: 'Duration (minutes)'),
+                decoration: InputDecoration(
+                  labelText: 'Duration (minutes)',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a duration';
@@ -207,6 +231,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   _duration = int.parse(value!);
                 },
               ),
+              SizedBox(height: 10),
 
               // Complexity
               DropdownButtonFormField<Complexity>(
@@ -218,9 +243,9 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                 },
                 items: Complexity.values
                     .map((complexity) => DropdownMenuItem<Complexity>(
-                  value: complexity,
-                  child: Text(complexity.toString().split('.').last),
-                ))
+                          value: complexity,
+                          child: Text(complexity.toString().split('.').last),
+                        ))
                     .toList(),
                 decoration: const InputDecoration(labelText: 'Complexity'),
                 validator: (value) {
@@ -230,7 +255,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   return null;
                 },
               ),
-
+              SizedBox(height: 10),
               // Affordability
               DropdownButtonFormField<Affordability>(
                 value: _selectedAffordability,
@@ -241,13 +266,11 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                 },
                 items: Affordability.values
                     .map((affordability) => DropdownMenuItem<Affordability>(
-                  value: affordability,
-                  child: Text(
-                      affordability.toString().split('.').last),
-                ))
+                          value: affordability,
+                          child: Text(affordability.toString().split('.').last),
+                        ))
                     .toList(),
-                decoration:
-                const InputDecoration(labelText: 'Affordability'),
+                decoration: const InputDecoration(labelText: 'Affordability'),
                 validator: (value) {
                   if (value == null) {
                     return 'Please select an affordability';
@@ -255,7 +278,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   return null;
                 },
               ),
-
+              SizedBox(height: 10),
               // Filter Options
               CheckboxListTile(
                 title: const Text('Gluten-Free'),
@@ -266,7 +289,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   });
                 },
               ),
-
+              SizedBox(height: 10),
               CheckboxListTile(
                 title: const Text('Lactose-Free'),
                 value: _isLactoseFree,
@@ -276,7 +299,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   });
                 },
               ),
-
+              SizedBox(height: 10),
               CheckboxListTile(
                 title: const Text('Vegan'),
                 value: _isVegan,
@@ -286,7 +309,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   });
                 },
               ),
-
+              SizedBox(height: 10),
               CheckboxListTile(
                 title: const Text('Vegetarian'),
                 value: _isVegetarian,
@@ -296,19 +319,17 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   });
                 },
               ),
+              SizedBox(height: 10),
 
               // Image URL Input
-              // Image URL Input
-              ImageInput(onPickImage: (imageUrl){
+              ImageInput(onPickImage: (imageUrl) {
                 print('Received imageUrl: $imageUrl');
                 setState(() {
-                   _imageUrl = imageUrl;
-                   _imageUrlReceived = true;
+                  _imageUrl = imageUrl;
+                  _imageUrlReceived = true;
                 });
-
               }),
-
-
+              SizedBox(height: 10),
               // Elevated Button
               ElevatedButton(
                 onPressed: () async {
@@ -321,7 +342,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                     _saveRecipe();
                   }
                 },
-                child: const Text('Add Recipe'),
+                child: Text('Add Recipe', style: TextStyle(color: materialColor[600]),),
               ),
             ],
           ),
@@ -344,10 +365,9 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
 
       recipeId = generateUniqueId();
 
-      print('Set Image Url is : $_imageUrl' );
+      print('Set Image Url is : $_imageUrl');
 
       final mealModel = MealModel(
-
         categories: _categories,
         title: _titleController.text,
         imageUrl: _imageUrl,
@@ -359,7 +379,8 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
         isGlutenFree: _isGlutenFree,
         isLactoseFree: _isLactoseFree,
         isVegan: _isVegan,
-        isVegetarian: _isVegetarian, id: recipeId,
+        isVegetarian: _isVegetarian,
+        id: recipeId,
       );
 
       addRecipeToFirestore(mealModel);

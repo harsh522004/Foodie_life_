@@ -6,6 +6,7 @@ final userDataProvider =
     FutureProvider.autoDispose<Map<String, dynamic>>((ref) async {
   User? user = FirebaseAuth.instance.currentUser;
 
+
   if (user != null) {
     DocumentSnapshot<Map<String, dynamic>> userData =
         await FirebaseFirestore.instance.collection('User').doc(user.uid).get();

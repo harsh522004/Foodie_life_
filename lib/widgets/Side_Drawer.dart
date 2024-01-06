@@ -14,6 +14,8 @@ import 'package:getwidget/components/drawer/gf_drawer.dart';
 import '../Models/Meals.dart';
 import '../Provider/Favouirte_Meal_Provider.dart';
 import '../Provider/User_Data_Provider.dart';
+import '../screens/settings.dart';
+
 enum FetchState { loading, success, error }
 
 class FetchResult {
@@ -21,15 +23,14 @@ class FetchResult {
   final String error;
 
   FetchResult.success(this.meals) : error = '';
+
   FetchResult.error(this.error) : meals = [];
 
   // Helper methods to check the state
   bool get isSuccess => error.isEmpty;
+
   bool get isError => error.isNotEmpty;
 }
-
-
-
 
 class SideDrawer extends ConsumerWidget {
   const SideDrawer({super.key});
@@ -41,17 +42,32 @@ class SideDrawer extends ConsumerWidget {
     void savedMealsNavigation() {
       final savedMealsState = ref.watch(savedRecipesProvider);
 
-
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (ctx) => MealsScreen(
-              mealsList: List<MealModel>.from(savedMealsState),
-              title: 'Saved Meals',
-            ),
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (ctx) => MealsScreen(
+            mealsList: List<MealModel>.from(savedMealsState),
+            title: 'Saved Meals',
           ),
-        );
-
+        ),
+      );
     }
+
+    void seetingsNavigation(){
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (ctx) => const SettingsMenu()
+      ));
+    }
+
+    Future<void> signOut() async {
+      try {
+        await FirebaseAuth.instance.signOut();
+        // Handle successful logout (e.g., navigate to login screen)
+      } catch (e) {
+        // Handle errors (e.g., show error message)
+        print("Error signing out: $e");
+      }
+    }
+
     return userData.when(
       data: (data) {
         String userImage = data['imageUrl']!;
@@ -106,9 +122,14 @@ class SideDrawer extends ConsumerWidget {
                 onTap: () {},
               ),
               CustomListTile(
+                icon: Icons.settings,
+                title: 'Settings',
+                onTap: seetingsNavigation,
+              ),
+              CustomListTile(
                 icon: Icons.logout,
                 title: 'Log out',
-                onTap: () {},
+                onTap: signOut,
               ),
             ],
           ),
