@@ -4,12 +4,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:foodei_life/Common/List_tile.dart';
+import 'package:foodei_life/constant/images.dart';
 import 'package:foodei_life/screens/Meals_Screen.dart';
 
 import 'package:foodei_life/theme/colors.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/components/drawer/gf_drawer.dart';
+import 'package:getwidget/components/drawer/gf_drawer_header.dart';
 
 import '../Models/Meals.dart';
 import '../Provider/Favouirte_Meal_Provider.dart';
@@ -52,10 +55,9 @@ class SideDrawer extends ConsumerWidget {
       );
     }
 
-    void seetingsNavigation(){
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (ctx) => const SettingsMenu()
-      ));
+    void seetingsNavigation() {
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (ctx) => const SettingsMenu()));
     }
 
     Future<void> signOut() async {
@@ -72,52 +74,35 @@ class SideDrawer extends ConsumerWidget {
       data: (data) {
         String userImage = data['imageUrl']!;
         String userName = data['username'];
-        return GFDrawer(
+        String userEmail = data['email'];
+        return Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              Container(
+
+              SizedBox(
                 height: 200,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      materialColor[500]!,
-                      materialColor[400]!,
-                      materialColor[300]!,
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+                child: UserAccountsDrawerHeader(
+
+                  decoration: BoxDecoration(
+                    color: materialColor[400],
                   ),
-                ),
-                padding: const EdgeInsets.only(top: 60),
-                alignment: Alignment.center,
-                child: Column(
-                  children: [
-                    GFAvatar(
-                      radius: 40.0,
-                      backgroundImage: NetworkImage(userImage),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    Text(
-                      userName,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 20,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
+                  accountName: Text(userName, style: TextStyle(fontWeight: FontWeight.w400),),
+
+                  accountEmail: Text(userEmail),
+                  currentAccountPicture: GFAvatar(
+                    radius: 40.0,
+                    backgroundImage: NetworkImage(userImage),
+                  ),
                 ),
               ),
               CustomListTile(
-                icon: Icons.save,
+                icon: FontAwesomeIcons.save,
                 title: 'Saved Meals',
                 onTap: savedMealsNavigation,
               ),
               CustomListTile(
-                icon: Icons.restaurant,
+                icon: FontAwesomeIcons.bowlFood,
                 title: 'My Recipes',
                 onTap: () {},
               ),

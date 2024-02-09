@@ -13,6 +13,15 @@ import 'package:foodei_life/theme/text_theme.dart';
 
 final _firebase = FirebaseAuth.instance;
 
+extension NavigationExtensions on BuildContext {
+  void pushReplacementAll(Widget newRoute) {
+    Navigator.of(this).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => newRoute),
+          (Route<dynamic> route) => false,
+    );
+  }
+}
+
 class AuthScreen extends StatefulWidget {
   final String title;
   final String subtitle;
@@ -43,6 +52,7 @@ class _AuthScreenState extends State<AuthScreen> {
   File? _selectedImage;
 
   late bool _isAuthentication = false;
+
 
   // when button Clicked
   void _onSaved() async {
@@ -80,16 +90,24 @@ class _AuthScreenState extends State<AuthScreen> {
         _emailController.clear();
         _passController.clear();
 
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LandingScreen()));
+        // Navigate to LoginScreen after successful signup
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const AuthScreen(
+              title: 'Log In',
+              subtitle: 'Log in to your account',
+              buttonLabel: 'Log In',
+              isLoginScreen: true,
+            ),
+          ),
+        );
       } else {
         final userCred = await _firebase.signInWithEmailAndPassword(
             email: _emailController.text, password: _passController.text);
         _emailController.clear();
         _passController.clear();
 
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => TabsScreen()));
+        context.pushReplacementAll(TabsScreen());
 
         setState(() {
           _isAuthentication = false;
@@ -114,6 +132,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 onPickImage: (pickedImage) {
                   _selectedImage = pickedImage;
                 },
+                defaultImage: AssetImage(hAddImage),
               ),
               const SizedBox(
                 width: 10,
@@ -224,6 +243,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           controller: _usernameController,
                           style: TextStyle(color: materialColor[700]),
                           decoration: InputDecoration(
+                            errorStyle: TextStyle(color: Colors.black),
                             hintText: 'Username',
                             prefixIcon: const Icon(Icons.face),
                             border: OutlineInputBorder(
@@ -261,6 +281,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         controller: _emailController,
                         style: TextStyle(color: materialColor[700]),
                         decoration: InputDecoration(
+                          errorStyle: TextStyle(color: Colors.black),
                           hintText: 'Email',
                           prefixIcon: const Icon(Icons.email),
                           border: OutlineInputBorder(
@@ -297,6 +318,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         style: TextStyle(color: materialColor[700]),
                         obscureText: true,
                         decoration: InputDecoration(
+                          errorStyle: TextStyle(color: Colors.black),
                           hintText: 'Password',
                           prefixIcon: const Icon(Icons.lock),
                           border: OutlineInputBorder(

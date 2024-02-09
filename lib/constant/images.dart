@@ -16,6 +16,12 @@ const hFrenchImage ='assets/French.jpg';
 const hSummerImage ='assets/Summer.jpg';
 const hUserImage = 'assets/User.jpg';
 const hNameImage = 'assets/Name.jpg';
+const hGlutenImage = 'assets/Gluten.png';
+const hLactoseImage = 'assets/Lactose.png';
+const hVeganImage = 'assets/vegan.png';
+const hVegImage = 'assets/Veg.png';
+const hSplashImage = 'assets/Splash.jpg';
+const hAddImage = 'assets/addImage.png';
 
 // tamp
 const hProfilePic = 'assets/ProfilePic.jpg';

@@ -3,8 +3,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:foodei_life/theme/colors.dart';
 import 'package:image_picker/image_picker.dart';
-
 
 class ImageInput extends StatefulWidget {
   const ImageInput({super.key, required this.onPickImage});
@@ -16,15 +16,13 @@ class ImageInput extends StatefulWidget {
 }
 
 class _ImageInputState extends State<ImageInput> {
-
-  File? _selectedImage ;
-
+  File? _selectedImage;
 
   Future<void> _takePicture() async {
     final imagePicker = ImagePicker();
     final pickedImage =
-    await imagePicker.pickImage(source: ImageSource.gallery, maxWidth: 600);
-    if(pickedImage == null){
+        await imagePicker.pickImage(source: ImageSource.gallery, maxWidth: 600);
+    if (pickedImage == null) {
       return;
     }
     setState(() {
@@ -32,15 +30,17 @@ class _ImageInputState extends State<ImageInput> {
     });
 
     User? user = FirebaseAuth.instance.currentUser;
-    if(user != null){
-      try{
-        final storageRef = FirebaseStorage.instance.ref().child('recipe_image').child('${user.uid}_${DateTime.now().microsecondsSinceEpoch}.jpg');
+    if (user != null) {
+      try {
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('recipe_image')
+            .child('${user.uid}_${DateTime.now().microsecondsSinceEpoch}.jpg');
         await storageRef.putFile(_selectedImage!);
 
-        final imageUrl = await storageRef.getDownloadURL() ;
+        final imageUrl = await storageRef.getDownloadURL();
         widget.onPickImage(imageUrl);
-
-      }catch(e){
+      } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error uploading Image: $e'),
@@ -49,26 +49,31 @@ class _ImageInputState extends State<ImageInput> {
         );
         print('Error uploading Image: $e');
       }
-
-    }else{
+    } else {
       print('user not Logged in');
     }
-
-
   }
+
   @override
   Widget build(BuildContext context) {
-
-
-
-
-    Widget content =  TextButton.icon(
+    Widget content = TextButton.icon(
         onPressed: _takePicture,
-        icon: const Icon(Icons.camera_alt),
-        label: const Text('Take Picture'));
+        icon: Icon(
+          Icons.camera_alt,
+          color: materialColor[600],
+        ),
+        label: Text(
+          'Take Picture',
+          style: TextStyle(color: materialColor[600]),
+        ));
 
-    if(_selectedImage != null){
-      content = Image.file(_selectedImage!, fit : BoxFit.cover,width:  double.infinity, height: double.infinity,);
+    if (_selectedImage != null) {
+      content = Image.file(
+        _selectedImage!,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+      );
     }
     return Container(
       decoration: BoxDecoration(
@@ -81,9 +86,6 @@ class _ImageInputState extends State<ImageInput> {
       width: double.infinity,
       alignment: Alignment.center,
       child: content,
-
     );
   }
 }
-
-

@@ -26,10 +26,11 @@ class HomeAboveContent extends ConsumerWidget {
 
     return userData.when(
         data: (data) {
+          print("User data: $data");
+
           if (data != null) {
             String username = data['username'];
             String userImage = data['imageUrl']!;
-
             return Column(
               children: [
                 Row(
@@ -97,8 +98,8 @@ class HomeAboveContent extends ConsumerWidget {
               ],
             );
           } else {
-            return const Text(
-                'Data is null'); // Handle the case where data is null
+            print("User data is null");
+            return Text('User data is null');
           }
         },
         error: (error, stackTrace) => Text('Error fetching user data: $error'),

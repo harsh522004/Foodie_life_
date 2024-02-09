@@ -59,7 +59,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
         showSelectedLabels: false,
         showUnselectedLabels: false,
         items: <BottomNavigationBarItem>[
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.category),
             label: '', // Empty label to hide text
           ),
@@ -78,7 +78,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
             ),
             label: '',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.filter_list_alt),
             label: '',
           ),

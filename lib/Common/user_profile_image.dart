@@ -5,9 +5,10 @@ import 'package:foodei_life/theme/colors.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UserProfileImage extends StatefulWidget {
-  const UserProfileImage({super.key, required this.onPickImage});
+  const UserProfileImage({super.key, required this.onPickImage, required this.defaultImage});
 
   final void Function(File pickedImage) onPickImage;
+  final ImageProvider<Object> defaultImage;
 
   @override
   State<UserProfileImage> createState() => _UserProfileImageState();
@@ -39,9 +40,23 @@ class _UserProfileImageState extends State<UserProfileImage> {
             child: CircleAvatar(
               radius: 35,
               backgroundColor: materialColor[50],
-              foregroundImage: _pickedImageFile != null
-                  ? FileImage(_pickedImageFile!)
-                  : null,
+              child: _pickedImageFile != null
+                  ? ClipOval(
+                child: Image.file(
+                  _pickedImageFile!,
+                  width: 70, // Set the width as needed
+                  height: 70, // Set the height as needed
+                  fit: BoxFit.cover,
+                ),
+              )
+                  : ClipOval(
+                child: Image(
+                  image: widget.defaultImage,
+                  width: 50, // Set the width as needed
+                  height: 50, // Set the height as needed
+                  fit: BoxFit.cover,
+                ),
+              ),
             ),
           ),
         ],

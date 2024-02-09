@@ -23,23 +23,22 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
+    return MaterialApp(
         theme: ThemeData(
-          primarySwatch: materialColor,
-          primaryColor: materialColor// Set your materialColor as the primary color
-          // Other theme configurations...
-        ),
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      home: StreamBuilder(stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot){
-        if(snapshot.hasData){
-          return const TabsScreen();
-        }
-        return const LandingScreen();
-
-          })
-
-    );
+            primarySwatch: materialColor,
+            primaryColor:
+                materialColor // Set your materialColor as the primary color
+            // Other theme configurations...
+            ),
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        home: StreamBuilder(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return const TabsScreen();
+              }
+              return const LandingScreen();
+            }));
   }
 }

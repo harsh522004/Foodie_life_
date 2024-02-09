@@ -22,6 +22,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
   bool _initialDataLoaded = false;
 
+
   @override
   void initState() {
     super.initState();
@@ -60,6 +61,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
+
               // Upper Part
               HomeAboveContent(
                 openDrawerCallback: () {

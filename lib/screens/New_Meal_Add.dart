@@ -129,7 +129,9 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   labelText: 'Title',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(color: materialColor[600]!),
                   ),
+
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -172,6 +174,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   labelText: 'Ingredients',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(color: materialColor[600]!),
                   ),
                 ),
                 validator: (value) {
@@ -195,6 +198,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   labelText: 'Steps',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(color: materialColor[600]!),
                   ),
                 ),
                 validator: (value) {
@@ -216,6 +220,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   labelText: 'Duration (minutes)',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(color: materialColor[600]!),
                   ),
                 ),
                 validator: (value) {
@@ -281,6 +286,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
               SizedBox(height: 10),
               // Filter Options
               CheckboxListTile(
+                activeColor: materialColor[600],
                 title: const Text('Gluten-Free'),
                 value: _isGlutenFree,
                 onChanged: (value) {
@@ -291,6 +297,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
               ),
               SizedBox(height: 10),
               CheckboxListTile(
+                activeColor: materialColor[600],
                 title: const Text('Lactose-Free'),
                 value: _isLactoseFree,
                 onChanged: (value) {
@@ -301,6 +308,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
               ),
               SizedBox(height: 10),
               CheckboxListTile(
+                activeColor: materialColor[600],
                 title: const Text('Vegan'),
                 value: _isVegan,
                 onChanged: (value) {
@@ -311,6 +319,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
               ),
               SizedBox(height: 10),
               CheckboxListTile(
+                activeColor: materialColor[600],
                 title: const Text('Vegetarian'),
                 value: _isVegetarian,
                 onChanged: (value) {
@@ -342,7 +351,10 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                     _saveRecipe();
                   }
                 },
-                child: Text('Add Recipe', style: TextStyle(color: materialColor[600]),),
+                child: Text(
+                  'Add Recipe',
+                  style: TextStyle(color: materialColor[600]),
+                ),
               ),
             ],
           ),

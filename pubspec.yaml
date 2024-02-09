@@ -53,6 +53,7 @@ dependencies:
   flutter_svg: ^2.0.9
   http: ^1.1.2
   path_provider: ^2.1.1
+  font_awesome_flutter: ^10.6.0
 
 
 dev_dependencies:
@@ -104,6 +105,12 @@ flutter:
    - assets/Summer.jpg
    - assets/User.jpg
    - assets/Name.jpg
+   - assets/vegan.png
+   - assets/Veg.png
+   - assets/Lactose.png
+   - assets/Gluten.png
+   - assets/Splash.jpg
+   - assets/addImage.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
