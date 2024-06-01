@@ -19,7 +19,7 @@ class hElevatedButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         minimumSize: const Size( 1 , 50),
 
-        backgroundColor: materialColor[50],
+        backgroundColor: materialColor[100],
         // Set button background to transparent
         elevation: 5,
         shape: RoundedRectangleBorder(
@@ -31,7 +31,7 @@ class hElevatedButton extends StatelessWidget {
         alignment: Alignment.center,
         child: Text(
           text,
-          style:  TextStyle(color: materialColor[500],
+          style:  TextStyle(color: materialColor[600],
         ),
       ),
     ),

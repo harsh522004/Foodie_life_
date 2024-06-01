@@ -2,12 +2,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:foodei_life/features/auth/screens/auth.dart';
 import 'package:foodei_life/features/landing/landing_screen.dart';
 import 'package:foodei_life/screens/Tabs_Screen.dart';
+import 'package:foodei_life/theme/colors.dart';
+
 import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -20,18 +24,27 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return  MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      home: StreamBuilder(stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot){
-        if(snapshot.hasData){
-          return const TabsScreen();
-        }
-        return const LandingScreen();
-
-          })
-
-    );
+    return MaterialApp(
+        theme: ThemeData(
+            primarySwatch: materialColor,
+            primaryColor:
+                materialColor // Set your materialColor as the primary color
+            // Other theme configurations...
+            ),
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter Demo',
+        home: const AuthScreen(
+            title: 'Welcome!',
+            subtitle: 'Register For Unlimited Chat!',
+            buttonLabel: 'SignUp',
+            isLoginScreen: false));
+    // home: StreamBuilder(
+    //     stream: FirebaseAuth.instance.authStateChanges(),
+    //     builder: (context, snapshot) {
+    //       if (snapshot.hasData) {
+    //         return const TabsScreen();
+    //       }
+    //       return const LandingScreen();
+    //     }));
   }
 }

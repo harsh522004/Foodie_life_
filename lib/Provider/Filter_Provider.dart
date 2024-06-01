@@ -1,6 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:foodei_life/Models/Meals.dart';
 
-import '../constant/Data/dummy_data.dart';
 
 enum FilterMap {
   glutenFree,
@@ -8,6 +9,7 @@ enum FilterMap {
   Veg,
   Vegan,
 }
+
 class FilterNotifier extends StateNotifier<Map<FilterMap, bool>> {
   FilterNotifier()
       : super({
@@ -35,25 +37,47 @@ StateNotifierProvider<FilterNotifier, Map<FilterMap, bool>>(
         (ref) => FilterNotifier());
 
 //which return the list of filtered meals
-final filterMealsProvider = Provider((ref) {
+final filterMealsProvider = FutureProvider<List<MealModel>>((ref) async {
   final activeFilter = ref.watch(filterProvider);
-  return dummyMeals.where((meal) {
-    if (activeFilter[FilterMap.glutenFree]! && !meal.isGlutenFree) {
-      return false;
+  try {
+    QuerySnapshot querySnapshot;
+
+    if (activeFilter.containsValue(true)) {
+// If any filter is true, apply filters
+      print('Applying filters: $activeFilter');
+
+
+      querySnapshot = await FirebaseFirestore.instance
+          .collection('recipes')
+          .where('isGlutenFree', isEqualTo: activeFilter[FilterMap.glutenFree])
+          .where('isLactoseFree', isEqualTo: activeFilter[FilterMap.lactoseFree])
+          .where('isVegan', isEqualTo: activeFilter[FilterMap.Vegan])
+          .where('isVegetarian', isEqualTo: activeFilter[FilterMap.Veg]).get();
+    } else {
+// If all filters are false, retrieve all recipes
+      print('No filters applied. Retrieving all recipes.');
+      querySnapshot = await FirebaseFirestore.instance
+          .collection('recipes')
+          .get();
     }
 
-    if (activeFilter[FilterMap.lactoseFree]! && !meal.isLactoseFree) {
-      return false;
+    print('QuerySnapshot Documents:');
+    for (var doc in querySnapshot.docs) {
+      print(doc.data());
     }
 
-    if (activeFilter[FilterMap.Veg]! && !meal.isVegetarian) {
-      return false;
-    }
+    List<MealModel> meals = querySnapshot.docs
+        .map((doc) => MealModel.fromFirestore(doc.data() as Map<String, dynamic>))
+        .where((meal) => meal.imageUrl.startsWith('http')) // Check if URL is valid
+        .toList();
 
-    if (activeFilter[FilterMap.Vegan]! && !meal.isVegan) {
-      return false;
-    }
+    print('Fetched ${meals.length} meals from Firestore.');
+    print('QuerySnapshot: $querySnapshot');
 
-    return true;
-  }).toList();
+    return meals;
+  } catch (e) {
+    print('Error fetching meals from Firestore: $e');
+    throw Exception('Error fetching meals: $e');
+    return [];
+  }
 });

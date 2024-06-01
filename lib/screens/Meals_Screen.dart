@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../Models/Meals.dart';
-import '../widgets/Meal_card.dart';
-import '../theme/colors.dart';
+import 'package:foodei_life/Models/Meals.dart';
+import 'package:foodei_life/theme/colors.dart';
+import 'package:foodei_life/widgets/Meal_card.dart';
+
 
 class MealsScreen extends StatelessWidget {
   const MealsScreen(

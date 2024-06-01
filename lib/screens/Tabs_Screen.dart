@@ -1,12 +1,12 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../Provider/Filter_Provider.dart';
-import 'package:foodei_life/screens/Home_Screen.dart';
-import '../widgets/set_Filter.dart';
 import '../theme/colors.dart';
-
+import '../widgets/set_Filter.dart';
+import 'Home_Screen.dart';
+import 'New_Meal_Add.dart';
 
 const kInitialFilters = {
   FilterMap.glutenFree: false,
@@ -33,19 +33,15 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final availableMeal = ref.watch(filterMealsProvider);
-
-
-    // Logic for Favorite Meals
-   /* final favMeals = ref.watch(favoriteMealsProvider);
-    activePage = CategoryMeals(
-      meals: favMeals,
-    );*/
+//final availableMeal = ref.watch(filterMealsProvider);
 
     Widget activePage(int index) {
       switch (index) {
         case 0:
-          return HomeScreen(avalaibleMeal: availableMeal);
+          return const HomeScreen();
+
+        case 1:
+          return const AddRecipeScreen();
         case 2:
           return const Filter();
         default:
@@ -63,7 +59,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
         showSelectedLabels: false,
         showUnselectedLabels: false,
         items: <BottomNavigationBarItem>[
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.category),
             label: '', // Empty label to hide text
           ),
@@ -73,16 +69,16 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
                 shape: BoxShape.circle,
                 color: materialColor[400],
               ),
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(5),
               child: Icon(
                 Icons.add,
-                size: 30,
+                size: 40,
                 color: materialColor[50],
               ),
             ),
             label: '',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.filter_list_alt),
             label: '',
           ),

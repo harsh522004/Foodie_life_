@@ -37,7 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   google_fonts: ^6.1.0
   image_picker: ^1.0.4
-  getwidget: ^2.0.4
+  getwidget: ^4.0.0
   transparent_image: ^2.0.1
   riverpod: ^2.4.4
   firebase_core: ^2.22.0
@@ -46,10 +46,25 @@ dependencies:
   cloud_firestore: ^4.9.1
   firebase_messaging: ^14.6.7
   flutter_riverpod: ^2.4.6
+  multi_select_flutter: ^4.1.3
+  sqflite: ^2.3.0
+  sqflite_common: ^2.5.0+2
+  uuid: ^4.2.2
+  flutter_svg: ^2.0.9
+  http: ^1.1.2
+  path_provider: ^2.1.1
+  font_awesome_flutter: ^10.6.0
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.13.1
+
+flutter_icons:
+  android: true
+  image_path: "assets/logo.png"
+
 
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -88,6 +103,14 @@ flutter:
    - assets/Light.jpg
    - assets/Quick.jpg
    - assets/Summer.jpg
+   - assets/User.jpg
+   - assets/Name.jpg
+   - assets/vegan.png
+   - assets/Veg.png
+   - assets/Lactose.png
+   - assets/Gluten.png
+   - assets/Splash.jpg
+   - assets/addImage.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
