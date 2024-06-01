@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../Models/Category_Model.dart';
 import '../constant/Data/dummy_data.dart';
 
@@ -12,12 +11,13 @@ class SearchProvider extends StateNotifier<List<CategoryModel>> {
     } else {
       state = availableCategories
           .where((category) =>
-          category.title.toLowerCase().contains(query.toLowerCase()))
+              category.title.toLowerCase().contains(query.toLowerCase()))
           .toList();
     }
   }
 }
 
-final searchProvider = StateNotifierProvider<SearchProvider, List<CategoryModel>>(
-      (ref) => SearchProvider(),
+final searchProvider =
+    StateNotifierProvider<SearchProvider, List<CategoryModel>>(
+  (ref) => SearchProvider(),
 );

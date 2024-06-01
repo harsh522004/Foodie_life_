@@ -3,10 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodei_life/Common/elevated_button.dart';
 import 'package:foodei_life/Common/user_profile_image.dart';
+import 'package:foodei_life/Provider/profile_image_provider.dart';
 import 'package:foodei_life/constant/images.dart';
-import 'package:foodei_life/features/landing/landing_screen.dart';
 import 'package:foodei_life/screens/Tabs_Screen.dart';
 import 'package:foodei_life/theme/colors.dart';
 import 'package:foodei_life/theme/text_theme.dart';
@@ -17,12 +18,12 @@ extension NavigationExtensions on BuildContext {
   void pushReplacementAll(Widget newRoute) {
     Navigator.of(this).pushAndRemoveUntil(
       MaterialPageRoute(builder: (context) => newRoute),
-          (Route<dynamic> route) => false,
+      (Route<dynamic> route) => false,
     );
   }
 }
 
-class AuthScreen extends StatefulWidget {
+class AuthScreen extends ConsumerStatefulWidget {
   final String title;
   final String subtitle;
   final String buttonLabel;
@@ -37,10 +38,10 @@ class AuthScreen extends StatefulWidget {
   });
 
   @override
-  State<AuthScreen> createState() => _AuthScreenState();
+  ConsumerState<AuthScreen> createState() => _AuthScreenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
+class _AuthScreenState extends ConsumerState<AuthScreen> {
   final _form = GlobalKey<FormState>();
 
   final _emailController = TextEditingController();
@@ -53,73 +54,80 @@ class _AuthScreenState extends State<AuthScreen> {
 
   late bool _isAuthentication = false;
 
-
   // when button Clicked
   void _onSaved() async {
-    final isValid = _form.currentState!.validate();
-    if (!isValid || (!widget.isLoginScreen && _selectedImage == null)) {
-      return;
-    }
-    _form.currentState!.save();
-    try {
-      setState(() {
-        _isAuthentication = true;
-      });
-      if (!widget.isLoginScreen) {
-        final userCred = await _firebase.createUserWithEmailAndPassword(
-            email: _emailController.text, password: _passController.text);
+    final pickedImageFile = ref.read(pickedImageProvider);
 
-        final storageRef = FirebaseStorage.instance
-            .ref()
-            .child('User_Images')
-            .child('${userCred.user!.uid}.jpg');
-        await storageRef.putFile(_selectedImage!);
-        final userImageUrl = await storageRef.getDownloadURL();
-
-        await FirebaseFirestore.instance
-            .collection('User')
-            .doc(userCred.user!.uid)
-            .set({
-          'username': _usernameController.text,
-          'email': _emailController.text,
-          'imageUrl': userImageUrl,
-          'savedRecipes': [],
+    if (pickedImageFile == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please select a profile image')),
+      );
+    } else {
+      final isValid = _form.currentState!.validate();
+      if (!isValid || (!widget.isLoginScreen && _selectedImage == null)) {
+        return;
+      }
+      _form.currentState!.save();
+      try {
+        setState(() {
+          _isAuthentication = true;
         });
+        if (!widget.isLoginScreen) {
+          final userCred = await _firebase.createUserWithEmailAndPassword(
+              email: _emailController.text, password: _passController.text);
 
-        _usernameController.clear();
-        _emailController.clear();
-        _passController.clear();
+          final storageRef = FirebaseStorage.instance
+              .ref()
+              .child('User_Images')
+              .child('${userCred.user!.uid}.jpg');
+          await storageRef.putFile(_selectedImage!);
+          final userImageUrl = await storageRef.getDownloadURL();
 
-        // Navigate to LoginScreen after successful signup
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => const AuthScreen(
-              title: 'Log In',
-              subtitle: 'Log in to your account',
-              buttonLabel: 'Log In',
-              isLoginScreen: true,
+          await FirebaseFirestore.instance
+              .collection('User')
+              .doc(userCred.user!.uid)
+              .set({
+            'username': _usernameController.text,
+            'email': _emailController.text,
+            'imageUrl': userImageUrl,
+            'savedRecipes': [],
+          });
+
+          _usernameController.clear();
+          _emailController.clear();
+          _passController.clear();
+
+          // Navigate to LoginScreen after successful signup
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const AuthScreen(
+                title: 'Log In',
+                subtitle: 'Log in to your account',
+                buttonLabel: 'Log In',
+                isLoginScreen: true,
+              ),
             ),
-          ),
-        );
-      } else {
-        final userCred = await _firebase.signInWithEmailAndPassword(
-            email: _emailController.text, password: _passController.text);
-        _emailController.clear();
-        _passController.clear();
+          );
+        } else {
+          final userCred = await _firebase.signInWithEmailAndPassword(
+              email: _emailController.text, password: _passController.text);
+          _emailController.clear();
+          _passController.clear();
 
-        context.pushReplacementAll(TabsScreen());
+          context.pushReplacementAll(TabsScreen());
 
+          setState(() {
+            _isAuthentication = false;
+          });
+        }
+      } on FirebaseAuthException catch (error) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(error.message ?? 'Authentication Error')));
         setState(() {
           _isAuthentication = false;
         });
       }
-    } on FirebaseAuthException catch (error) {
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(error.message ?? 'Authentication Error')));
-      setState(() {
-        _isAuthentication = false;
-      });
     }
   }
 
@@ -184,7 +192,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 borderRadius: BorderRadius.circular(60),
               ),
               child: SizedBox(
-                width: MediaQuery.of(context).size.width,
+                width: double.infinity,
                 height: 200,
                 child: ClipRRect(
                     borderRadius: const BorderRadius.only(
@@ -200,7 +208,7 @@ class _AuthScreenState extends State<AuthScreen> {
               ),
             ),
 
-            //Icon Back
+            //Icon to move Back
             Positioned(
               top: 37,
               left: 12,
@@ -214,7 +222,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
             // content
             Padding(
-              padding: const EdgeInsets.all(40.0),
+              padding: const EdgeInsets.all(20.0),
               child: Form(
                 key: _form,
                 child: Column(
@@ -226,116 +234,108 @@ class _AuthScreenState extends State<AuthScreen> {
 
                     const SizedBox(height: 30),
 
+                    // username if it is not login screen
                     if (!widget.isLoginScreen)
-                      Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [
-                              materialColor[50]!,
-                              materialColor[400]!,
-                            ],
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
+                      TextFormField(
+                        keyboardType: TextInputType.emailAddress,
+                        controller: _usernameController,
+                        style: const TextStyle(color: Colors.black),
+                        decoration: InputDecoration(
+                          filled: true,
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Colors
+                                    .black), // Set your desired focus color here
+                            borderRadius: BorderRadius.circular(18),
                           ),
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                        child: TextFormField(
-                          controller: _usernameController,
-                          style: TextStyle(color: materialColor[700]),
-                          decoration: InputDecoration(
-                            errorStyle: TextStyle(color: Colors.black),
-                            hintText: 'Username',
-                            prefixIcon: const Icon(Icons.face),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(18),
-                            ),
+                          errorStyle: const TextStyle(color: Colors.white),
+                          hintText: 'Username',
+                          prefixIcon:
+                              const Icon(Icons.email, color: Colors.black),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(18),
                           ),
-                          validator: (value) {
-                            if (value == null ||
-                                value.trim().length < 4 ||
-                                value.isEmpty) {
-                              return 'Please enter Valid UserName';
-                            }
-                            return null;
-                          },
                         ),
+                        validator: (value) {
+                          if (value == null ||
+                              value.trim().length < 4 ||
+                              value.isEmpty) {
+                            return 'Please enter Valid UserName';
+                          }
+                          return null;
+                        },
                       ),
 
                     const SizedBox(height: 20),
 
                     // Email Input
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            materialColor[50]!,
-                            materialColor[400]!,
-                          ],
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
+
+                    TextFormField(
+                      keyboardType: TextInputType.emailAddress,
+                      controller: _emailController,
+                      style: const TextStyle(color: Colors.black),
+                      decoration: InputDecoration(
+                        filled: true,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                              color: Colors
+                                  .black), // Set your desired focus color here
+                          borderRadius: BorderRadius.circular(18),
                         ),
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                      child: TextFormField(
-                        keyboardType: TextInputType.emailAddress,
-                        controller: _emailController,
-                        style: TextStyle(color: materialColor[700]),
-                        decoration: InputDecoration(
-                          errorStyle: TextStyle(color: Colors.black),
-                          hintText: 'Email',
-                          prefixIcon: const Icon(Icons.email),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(18),
-                          ),
+                        errorStyle: const TextStyle(color: Colors.white),
+                        hintText: 'Email',
+                        prefixIcon:
+                            const Icon(Icons.email, color: Colors.black),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(18),
                         ),
-                        validator: (value) {
-                          if (value == null ||
-                              value.isEmpty ||
-                              !value.contains('@')) {
-                            return 'Please Enter Your Email';
-                          }
-                          return null;
-                        },
                       ),
+                      validator: (value) {
+                        if (value == null ||
+                            value.isEmpty ||
+                            !value.contains('@')) {
+                          return 'Please Enter Your Email';
+                        }
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 20),
 
                     // password Input
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            materialColor[50]!,
-                            materialColor[400]!,
-                          ],
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
+
+                    TextFormField(
+                      keyboardType: TextInputType.emailAddress,
+                      controller: _passController,
+                      style: const TextStyle(color: Colors.black),
+                      decoration: InputDecoration(
+                        filled: true,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(
+                              color: Colors
+                                  .black), // Set your desired focus color here
+                          borderRadius: BorderRadius.circular(18),
                         ),
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                      child: TextFormField(
-                        controller: _passController,
-                        style: TextStyle(color: materialColor[700]),
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          errorStyle: TextStyle(color: Colors.black),
-                          hintText: 'Password',
-                          prefixIcon: const Icon(Icons.lock),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(18),
-                          ),
+                        errorStyle: const TextStyle(color: Colors.white),
+                        hintText: 'Password',
+                        prefixIcon:
+                            const Icon(Icons.email, color: Colors.black),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(18),
                         ),
-                        validator: (value) {
-                          if (value == null ||
-                              value.trim().length < 6 ||
-                              value.isEmpty) {
-                            return 'Please enter Password';
-                          }
-                          return null;
-                        },
                       ),
+                      validator: (value) {
+                        if (value == null ||
+                            value.trim().length < 6 ||
+                            value.isEmpty) {
+                          return 'Please enter Password';
+                        }
+                        return null;
+                      },
                     ),
-                    const SizedBox(height: 250),
+
+                    const SizedBox(height: 100),
+                    //const SizedBox(height: 250),
+
                     if (_isAuthentication)
                       Center(
                         child: CircularProgressIndicator(
