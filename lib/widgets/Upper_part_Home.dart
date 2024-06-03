@@ -28,81 +28,77 @@ class HomeAboveContent extends ConsumerWidget {
         data: (data) {
           print("User data: $data");
 
-          if (data != null) {
-            String username = data['username'];
-            String userImage = data['imageUrl']!;
-            return Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GFAvatar(
-                      backgroundImage: NetworkImage(userImage),
-                      radius: 40,
+          String username = data['username'];
+          String userImage = data['imageUrl']!;
+          return Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GFAvatar(
+                    backgroundImage: NetworkImage(userImage),
+                    radius: 40,
+                  ),
+                  GestureDetector(
+                    onTap: openDrawerCallback, // Call _openDrawer when tapped
+                    child: Icon(
+                      Icons.notes_sharp,
+                      color: materialColor[500],
+                      size: 40,
                     ),
-                    GestureDetector(
-                      onTap: openDrawerCallback, // Call _openDrawer when tapped
-                      child: Icon(
-                        Icons.notes_sharp,
-                        color: materialColor[500],
-                        size: 40,
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+
+              // Text title
+              Container(
+                padding: const EdgeInsets.only(left: 5),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Hey! $username',
+                      style: GoogleFonts.getFont(
+                        'Open Sans',
+                        fontSize: 40,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      'What\'s in your Mind Today?',
+                      style: GoogleFonts.getFont(
+                        'Open Sans',
+                        fontSize: 25,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 8,
-                ),
+              ),
 
-                // Text title
-                Container(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Hey! $username',
-                        style: GoogleFonts.getFont(
-                          'Open Sans',
-                          fontSize: 40,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Text(
-                        'What\'s in your Mind Today?',
-                        style: GoogleFonts.getFont(
-                          'Open Sans',
-                          fontSize: 25,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+              // Sized Box
+              const SizedBox(
+                height: 15,
+              ),
 
-                // Sized Box
-                const SizedBox(
-                  height: 15,
-                ),
-
-                // Search Bar
-                HSearchBar(
-                    backgroundColor: materialColor[100]!,
-                    hintText: 'Search',
-                    searchController: searchController,
-                    onSearchQueryChanged: (String query) {
-                      ref
-                          .read(searchProvider.notifier)
-                          .updateFilteredCategories(query);
-                    }),
-              ],
-            );
-          } else {
-            print("User data is null");
-            return Text('User data is null');
-          }
+              // Search Bar
+              HSearchBar(
+                  backgroundColor: materialColor[100]!,
+                  hintText: 'Search',
+                  searchController: searchController,
+                  onSearchQueryChanged: (String query) {
+                    ref
+                        .read(searchProvider.notifier)
+                        .updateFilteredCategories(query);
+                  }),
+            ],
+          );
         },
-        error: (error, stackTrace) => Text('Error fetching user data: $error'),
+        error: (error, stackTrace) =>
+            Text('Error fetching user data from screen error: $error'),
         loading: () => const CircularProgressIndicator());
   }
 }

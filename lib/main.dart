@@ -33,18 +33,13 @@ class MyApp extends StatelessWidget {
             ),
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
-        home: const AuthScreen(
-            title: 'Welcome!',
-            subtitle: 'Register For Unlimited Chat!',
-            buttonLabel: 'SignUp',
-            isLoginScreen: false));
-    // home: StreamBuilder(
-    //     stream: FirebaseAuth.instance.authStateChanges(),
-    //     builder: (context, snapshot) {
-    //       if (snapshot.hasData) {
-    //         return const TabsScreen();
-    //       }
-    //       return const LandingScreen();
-    //     }));
+        home: StreamBuilder(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return const TabsScreen();
+              }
+              return const LandingScreen();
+            }));
   }
 }

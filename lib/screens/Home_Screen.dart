@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:foodei_life/Provider/User_Data_Provider.dart';
 
 import '../Models/Category_Model.dart';
 import '../Provider/Filter_Provider.dart';
@@ -22,18 +23,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
   bool _initialDataLoaded = false;
 
-
   @override
   void initState() {
     super.initState();
-
     // Load initial data for displayedCategories
     Future.delayed(Duration.zero, () {
       _loadInitialData();
     });
   }
 
-  void _loadInitialData() {
+  void _loadInitialData() async {
+    await ref.read(userDataProvider.future);
     ref.read(searchProvider.notifier).updateFilteredCategories('');
     setState(() {
       _initialDataLoaded = true;
@@ -42,11 +42,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("Building HomeScreen");
+    print("\n\nBuilding HomeScreen\n\n");
 
     if (!_initialDataLoaded) {
       // Show a loading indicator or handle the case when initial data is not loaded
-      return const CircularProgressIndicator(); // Or any loading indicator
+      return Center(
+          child: const CircularProgressIndicator()); // Or any loading indicator
     }
 
     // Move the filterMealsProvider outside the build method
@@ -61,7 +62,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-
               // Upper Part
               HomeAboveContent(
                 openDrawerCallback: () {
@@ -110,11 +110,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  // Move this method outside the build method
   void _selectedCategory(
-      BuildContext context,
-      CategoryModel selectedCategory,
-      ) async {
+    BuildContext context,
+    CategoryModel selectedCategory,
+  ) async {
     try {
       showDialog(
         context: context,
@@ -133,7 +132,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       mealsResult.when(
         data: (meals) {
           final filteredList = meals
-              .where((element) => element.categories.contains(selectedCategory.id))
+              .where(
+                  (element) => element.categories.contains(selectedCategory.id))
               .toList();
 
           Navigator.of(context).push(MaterialPageRoute(
@@ -156,7 +156,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         },
       );
     } catch (error) {
-      Navigator.pop(context); // Close the loading indicator in case of an exception
+      Navigator.pop(
+          context); // Close the loading indicator in case of an exception
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: $error'),
@@ -165,5 +166,4 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       );
     }
   }
-
 }

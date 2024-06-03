@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:foodei_life/Common/List_tile.dart';
 import 'package:foodei_life/constant/images.dart';
+import 'package:foodei_life/features/auth/screens/auth.dart';
 import 'package:foodei_life/screens/Meals_Screen.dart';
 
 import 'package:foodei_life/theme/colors.dart';
@@ -63,7 +64,16 @@ class SideDrawer extends ConsumerWidget {
     Future<void> signOut() async {
       try {
         await FirebaseAuth.instance.signOut();
-        // Handle successful logout (e.g., navigate to login screen)
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (context) => AuthScreen(
+                  title: "Log In",
+                  subtitle: "Log in to your account",
+                  buttonLabel: "Log In",
+                  isLoginScreen: true)),
+          (Route<dynamic> route) => false,
+        );
       } catch (e) {
         // Handle errors (e.g., show error message)
         print("Error signing out: $e");
@@ -79,16 +89,16 @@ class SideDrawer extends ConsumerWidget {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-
               SizedBox(
                 height: 200,
                 child: UserAccountsDrawerHeader(
-
                   decoration: BoxDecoration(
                     color: materialColor[400],
                   ),
-                  accountName: Text(userName, style: TextStyle(fontWeight: FontWeight.w400),),
-
+                  accountName: Text(
+                    userName,
+                    style: TextStyle(fontWeight: FontWeight.w400),
+                  ),
                   accountEmail: Text(userEmail),
                   currentAccountPicture: GFAvatar(
                     radius: 40.0,

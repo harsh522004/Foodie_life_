@@ -106,7 +106,8 @@ class RecipeFinal extends ConsumerWidget {
               const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(  // '• $ingredient' //"${meal.duration} mins"
+                child: Text(
+                  // '• $ingredient' //"${meal.duration} mins"
                   '• ${meal.duration} mins ',
                   style: TextStyle(fontSize: 16),
                 ),

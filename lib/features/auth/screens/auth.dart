@@ -97,19 +97,22 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           _emailController.clear();
           _passController.clear();
 
+          await Future.delayed(const Duration(milliseconds: 500));
+
+          context.pushReplacementAll(TabsScreen());
           // Navigate to LoginScreen after successful signup
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => const AuthScreen(
-                title: 'Log In',
-                subtitle: 'Log in to your account',
-                buttonLabel: 'Log In',
-                isLoginScreen: true,
-              ),
-            ),
-          );
+          // Navigator.of(context).pushReplacement(
+          //   MaterialPageRoute(
+          //     builder: (context) => const AuthScreen(
+          //       title: 'Log In',
+          //       subtitle: 'Log in to your account',
+          //       buttonLabel: 'Log In',
+          //       isLoginScreen: true,
+          //     ),
+          //   ),
+          // );
         } else {
-          final userCred = await _firebase.signInWithEmailAndPassword(
+          await _firebase.signInWithEmailAndPassword(
               email: _emailController.text, password: _passController.text);
           _emailController.clear();
           _passController.clear();
@@ -205,18 +208,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       widget.isLoginScreen ? hlogInImage : hSignupImage,
                       fit: BoxFit.cover,
                     )),
-              ),
-            ),
-
-            //Icon to move Back
-            Positioned(
-              top: 37,
-              left: 12,
-              child: IconButton(
-                icon: const Icon(Icons.arrow_back_ios_outlined),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
               ),
             ),
 
@@ -339,8 +330,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                     if (_isAuthentication)
                       Center(
                         child: CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation(materialColor[800]),
+                          valueColor: AlwaysStoppedAnimation(Colors.white),
                         ),
                       ),
                     if (!_isAuthentication)
@@ -360,26 +350,27 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                         child: TextButton(
                           onPressed: () {
                             if (widget.isLoginScreen) {
-                              Navigator.of(context).pushReplacement(
+                              Navigator.pushAndRemoveUntil(
+                                context,
                                 MaterialPageRoute(
-                                  builder: (context) => const AuthScreen(
-                                      title: 'Sign Up',
-                                      subtitle:
-                                          'Create an account to get started',
-                                      buttonLabel: 'Sign Up',
-                                      isLoginScreen: false),
-                                ),
+                                    builder: (context) => AuthScreen(
+                                        title: "Sign Up",
+                                        subtitle:
+                                            "Create an account to get started",
+                                        buttonLabel: "Sign Up",
+                                        isLoginScreen: true)),
+                                (Route<dynamic> route) => false,
                               );
                             } else {
-                              Navigator.of(context).pushReplacement(
+                              Navigator.pushAndRemoveUntil(
+                                context,
                                 MaterialPageRoute(
-                                  builder: (context) => const AuthScreen(
-                                    title: 'Log In',
-                                    subtitle: 'Log in to your account',
-                                    buttonLabel: 'Log In',
-                                    isLoginScreen: true,
-                                  ),
-                                ),
+                                    builder: (context) => AuthScreen(
+                                        title: "Log In",
+                                        subtitle: "Log in to your account",
+                                        buttonLabel: "Log In",
+                                        isLoginScreen: true)),
+                                (Route<dynamic> route) => false,
                               );
                             }
                           },
