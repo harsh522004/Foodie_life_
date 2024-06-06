@@ -35,13 +35,12 @@ class Filter extends ConsumerWidget {
                       )),
               subtitle: Text('Only Include gluten-free meals.',
                   style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                        color: Theme.of(context).colorScheme.onBackground,
+                        color: Theme.of(context).colorScheme.onSurface,
                       )),
             ),
           ),
           ListTile(
             leading: CircleAvatar(
-
               child: Image(image: AssetImage(hLactoseImage)),
             ),
             title: SwitchListTile(
@@ -58,7 +57,7 @@ class Filter extends ConsumerWidget {
                       )),
               subtitle: Text('Only Include Lactos-free meals.',
                   style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                        color: Theme.of(context).colorScheme.onBackground,
+                        color: Theme.of(context).colorScheme.onSurface,
                       )),
             ),
           ),
@@ -80,7 +79,7 @@ class Filter extends ConsumerWidget {
                       )),
               subtitle: Text('Only Include Veg meals.',
                   style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                        color: Theme.of(context).colorScheme.onBackground,
+                        color: Theme.of(context).colorScheme.onSurface,
                       )),
             ),
           ),
@@ -102,7 +101,7 @@ class Filter extends ConsumerWidget {
                       )),
               subtitle: Text('Only Include Vegan meals.',
                   style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                        color: Theme.of(context).colorScheme.onBackground,
+                        color: Theme.of(context).colorScheme.onSurface,
                       )),
             ),
           )

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import '../Models/Category_Model.dart';
 import '../Provider/Filter_Provider.dart';
 import '../Provider/Serch_bar_provider.dart';
-import '../constant/Data/dummy_data.dart';
 import '../widgets/Category_Card.dart';
 import '../widgets/Side_Drawer.dart';
 import '../widgets/Upper_part_Home.dart';
@@ -21,7 +21,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController _searchController = TextEditingController();
   bool _initialDataLoaded = false;
-
 
   @override
   void initState() {
@@ -53,58 +52,56 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     //final availableMeal = ref.watch(filterMealsProvider);
     final List<CategoryModel> displayedCategories = ref.watch(searchProvider);
 
-    return SafeArea(
-      child: Scaffold(
-        key: _scaffoldKey,
-        endDrawer: const SideDrawer(),
-        body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
+    return Scaffold(
+      key: _scaffoldKey,
+      endDrawer: const SideDrawer(),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 60, left: 20, right: 20),
+        child: Column(
+          children: [
+            //Upper Part
+            HomeAboveContent(
+              openDrawerCallback: () {
+                _scaffoldKey.currentState!.openEndDrawer();
+              },
+              scaffoldKey: _scaffoldKey,
+              searchController: _searchController,
+            ),
 
-              // Upper Part
-              HomeAboveContent(
-                openDrawerCallback: () {
-                  _scaffoldKey.currentState!.openEndDrawer();
-                },
-                scaffoldKey: _scaffoldKey,
-                searchController: _searchController,
-              ),
-
-              const SizedBox(
-                height: 10,
-              ),
-              // Middle Part (Scrollable Grid of Categories)
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 16.0,
-                          mainAxisSpacing: 16.0,
-                        ),
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: displayedCategories.length,
-                        itemBuilder: (context, index) {
-                          final selectedCategory = displayedCategories[index];
-                          return CategoryCard(
-                            onTap: () {
-                              _selectedCategory(context, selectedCategory);
-                            },
-                            selectedCategory: selectedCategory,
-                          );
-                        },
+            const SizedBox(
+              height: 10,
+            ),
+            // Middle Part (Scrollable Grid of Categories)
+            Flexible(
+              fit: FlexFit.tight,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 16.0,
+                        mainAxisSpacing: 16.0,
                       ),
-                    ],
-                  ),
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: displayedCategories.length,
+                      itemBuilder: (context, index) {
+                        final selectedCategory = displayedCategories[index];
+                        return CategoryCard(
+                          onTap: () {
+                            _selectedCategory(context, selectedCategory);
+                          },
+                          selectedCategory: selectedCategory,
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -112,9 +109,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   // Move this method outside the build method
   void _selectedCategory(
-      BuildContext context,
-      CategoryModel selectedCategory,
-      ) async {
+    BuildContext context,
+    CategoryModel selectedCategory,
+  ) async {
     try {
       showDialog(
         context: context,
@@ -133,7 +130,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       mealsResult.when(
         data: (meals) {
           final filteredList = meals
-              .where((element) => element.categories.contains(selectedCategory.id))
+              .where(
+                  (element) => element.categories.contains(selectedCategory.id))
               .toList();
 
           Navigator.of(context).push(MaterialPageRoute(
@@ -156,7 +154,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         },
       );
     } catch (error) {
-      Navigator.pop(context); // Close the loading indicator in case of an exception
+      Navigator.pop(
+          context); // Close the loading indicator in case of an exception
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error: $error'),
@@ -165,5 +164,4 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       );
     }
   }
-
 }

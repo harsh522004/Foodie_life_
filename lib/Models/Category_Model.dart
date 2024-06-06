@@ -5,7 +5,6 @@ class CategoryModel {
   final String title;
   final AssetImage categoryImage;
 
-  CategoryModel({required this.id, required this.title, required this.categoryImage});
-
-
+  CategoryModel(
+      {required this.id, required this.title, required this.categoryImage});
 }

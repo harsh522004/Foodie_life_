@@ -3,7 +3,7 @@ const hLandingImage1 = 'assets/landing.png';
 const hlogInImage = 'assets/Login.jpg';
 const hSignupImage = 'assets/SignUp.jpg';
 
-const hBarIcon = 'assets/Bars.svg';
+const hBarIcon = 'assets/sideBar.png';
 const hItalianImage = 'assets/italian.jpeg';
 const hQuickImage = 'assets/Quick.jpg';
 const hHamburgersImage = 'assets/Hamburgers.jpg';
@@ -24,4 +24,5 @@ const hSplashImage = 'assets/Splash.jpg';
 const hAddImage = 'assets/addImage.png';
 
 // tamp
-const hProfilePic = 'assets/ProfilePic.jpg';
+const hProfilePic = 'assets/userimage.png';
+const hFilterVartical = 'assets/filter-vertical.svg';
