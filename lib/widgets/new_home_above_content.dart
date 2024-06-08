@@ -28,14 +28,23 @@ class NewHomeAboveContent extends ConsumerWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // username text
               Text(
                 "Hi, $username",
                 style: TextStyle(
                     fontSize: 18,
-                    color: Vx.hexToColor("656565"),
+                    color: htextgreayColor,
                     fontWeight: FontWeight.bold),
               ),
+
+              10.heightBox,
+
+              // title text for home
               CustomText(),
+
+              20.heightBox,
+
+              // search bar
               NewSearchBar(
                   backgroundColor: hgreyBg,
                   hintText: "Find your foodie recipes")

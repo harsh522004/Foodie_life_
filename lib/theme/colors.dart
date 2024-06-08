@@ -19,3 +19,4 @@ Color hgreyBg = Vx.hexToColor("ececec");
 Color hcreamBg = Vx.hexToColor("e9e1ce");
 Color hyellow01 = Vx.hexToColor("f3d738");
 Color hyellow02 = Vx.hexToColor("efb31a");
+Color htextgreayColor = Vx.hexToColor("656565");

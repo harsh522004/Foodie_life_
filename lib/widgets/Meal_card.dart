@@ -6,9 +6,6 @@ import 'package:foodei_life/screens/Recipe_Final.dart';
 import 'package:foodei_life/widgets/Below_Meals.dart';
 import 'package:transparent_image/transparent_image.dart';
 
-
-
-
 class MealCard extends StatelessWidget {
   const MealCard(@required this.meals, {super.key});
 
@@ -40,7 +37,7 @@ class MealCard extends StatelessWidget {
         child: Stack(
           children: [
             Hero(
-              tag: meals.id??'',
+              tag: meals.id ?? '',
               child: FadeInImage(
                 image: NetworkImage(meals.imageUrl),
                 placeholder: MemoryImage(kTransparentImage),

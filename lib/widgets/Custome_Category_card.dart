@@ -6,9 +6,13 @@ import 'package:velocity_x/velocity_x.dart';
 
 class CustomeCategoryCard extends StatelessWidget {
   const CustomeCategoryCard(
-      {super.key, required this.selectedCategory, required this.onTap});
+      {super.key,
+      required this.selectedCategory,
+      required this.onTap,
+      required this.isSelected});
   final CategoryModel selectedCategory;
   final VoidCallback onTap;
+  final bool isSelected;
 
   // selectedCategory
   // ontap
@@ -22,7 +26,7 @@ class CustomeCategoryCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         side: BorderSide(color: Colors.black),
       ),
-      tileColor: hcreamBg,
+      tileColor: isSelected ? hyellow02 : hcreamBg,
       leading: CircleAvatar(
         backgroundImage: selectedCategory.categoryImage,
       ).pOnly(bottom: 5),

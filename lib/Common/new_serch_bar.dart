@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:foodei_life/constant/images.dart';
 import 'package:foodei_life/theme/colors.dart';
+import 'package:foodei_life/widgets/New_Bottomsheet_Filter.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class NewSearchBar extends StatelessWidget {
@@ -41,14 +42,23 @@ class NewSearchBar extends StatelessWidget {
           ),
         ),
         10.widthBox,
-        Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  color: hyellow02,
-                ),
-                child:
-                    SvgPicture.asset(hFilterVartical).pSymmetric(v: 10, h: 10))
-            .h(54)
+        GestureDetector(
+          onTap: () {
+            showModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  return const newFilter();
+                });
+          },
+          child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: hyellow02,
+                  ),
+                  child: SvgPicture.asset(hFilterVartical)
+                      .pSymmetric(v: 10, h: 10))
+              .h(54),
+        )
       ],
     );
   }

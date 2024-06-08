@@ -7,7 +7,12 @@ import 'package:foodei_life/screens/Meals_Screen.dart';
 import 'package:foodei_life/widgets/Custome_Category_card.dart';
 
 class NewCategoryGrid extends ConsumerStatefulWidget {
-  const NewCategoryGrid({super.key});
+  const NewCategoryGrid(
+      {required this.selectedCategory,
+      required this.onCategorySelected,
+      super.key});
+  final Function(CategoryModel) onCategorySelected;
+  final CategoryModel? selectedCategory;
 
   @override
   _NewCategoryGridState createState() => _NewCategoryGridState();
@@ -16,80 +21,27 @@ class NewCategoryGrid extends ConsumerStatefulWidget {
 class _NewCategoryGridState extends ConsumerState<NewCategoryGrid> {
   @override
   Widget build(BuildContext context) {
-    List<CategoryModel> productList = [];
     final List<CategoryModel> displayedCategories = ref.watch(searchProvider);
     return ListView.builder(
-      itemCount: 10,
+      itemCount: displayedCategories.length,
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) {
-        final selectedCategory = displayedCategories[index];
+        final currentCategory = displayedCategories[index];
+
         return CustomeCategoryCard(
-          selectedCategory: selectedCategory,
+          selectedCategory: currentCategory,
           onTap: () {
-            _selectedCategory(context, selectedCategory);
+            widget.onCategorySelected(
+              currentCategory,
+            );
           },
+          isSelected: widget.selectedCategory == currentCategory,
         );
       },
     );
   }
 
   // Move this method outside the build method
-  void _selectedCategory(
-    BuildContext context,
-    CategoryModel selectedCategory,
-  ) async {
-    try {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
-        barrierDismissible: false,
-      );
-
-      final mealsResult = await ref.watch(filterMealsProvider);
-
-      Navigator.pop(context); // Close the loading indicator
-
-      mealsResult.when(
-        data: (meals) {
-          final filteredList = meals
-              .where(
-                  (element) => element.categories.contains(selectedCategory.id))
-              .toList();
-
-          Navigator.of(context).push(MaterialPageRoute(
-            builder: (ctx) => MealsScreen(
-              title: selectedCategory.title,
-              mealsList: filteredList,
-            ),
-          ));
-        },
-        loading: () {
-          // This part will not be executed, as loading is already handled by the loading indicator
-        },
-        error: (error, stack) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error: $error'),
-              duration: const Duration(seconds: 5),
-            ),
-          );
-        },
-      );
-    } catch (error) {
-      Navigator.pop(
-          context); // Close the loading indicator in case of an exception
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: $error'),
-          duration: const Duration(seconds: 5),
-        ),
-      );
-    }
-  }
 }
 
 
