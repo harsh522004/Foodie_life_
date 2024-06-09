@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 enum Complexity {
   simple,
   challenging,
@@ -27,6 +25,7 @@ class MealModel {
     required this.isLactoseFree,
     required this.isVegan,
     required this.isVegetarian,
+    required this.viewCount,
   });
 
   final String id;
@@ -42,6 +41,7 @@ class MealModel {
   final bool isLactoseFree;
   final bool isVegan;
   final bool isVegetarian;
+  final int viewCount;
 
   factory MealModel.fromFirestore(Map<String, dynamic> data) {
     return MealModel(
@@ -62,6 +62,7 @@ class MealModel {
       isLactoseFree: data['isLactoseFree'],
       isVegan: data['isVegan'],
       isVegetarian: data['isVegetarian'],
+      viewCount: 0,
     );
   }
 }

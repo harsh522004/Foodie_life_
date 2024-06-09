@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,12 +9,53 @@ import '../Provider/Favouirte_Meal_Provider.dart';
 import '../Provider/User_Data_Provider.dart';
 import '../theme/colors.dart';
 
-class RecipeFinal extends ConsumerWidget {
+class RecipeFinal extends ConsumerStatefulWidget {
   const RecipeFinal(this.meal, {Key? key}) : super(key: key);
   final MealModel meal;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _RecipeFinalState createState() => _RecipeFinalState();
+}
+
+class _RecipeFinalState extends ConsumerState<RecipeFinal> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    incrementViewCount(widget.meal.id);
+  }
+
+  void incrementViewCount(String recipeId) async {
+    try {
+      final recipeRef =
+          FirebaseFirestore.instance.collection('recipes').doc(recipeId);
+
+      print("Attempting to increment view count for recipe: $recipeId");
+
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        await Future.delayed(Duration(milliseconds: 500));
+        final snapshot = await transaction.get(recipeRef);
+
+        print("Transaction snapshot data: ${snapshot.data()}");
+
+        if (!snapshot.exists) {
+          throw Exception("Recipe does not exist!");
+        }
+
+        int newViewCount = snapshot.data()!['viewCount'] + 1;
+        transaction.update(recipeRef, {'viewCount': newViewCount});
+
+        print("Successfully updated view count to $newViewCount");
+      });
+    } catch (error) {
+      print("Error updating view count: $error");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final meal = widget.meal;
     final user = FirebaseAuth.instance.currentUser!;
     bool isSaved =
         ref.watch(savedRecipesProvider.notifier).isRecipeFavorite(meal.id);
@@ -106,7 +148,8 @@ class RecipeFinal extends ConsumerWidget {
               const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(  // '• $ingredient' //"${meal.duration} mins"
+                child: Text(
+                  // '• $ingredient' //"${meal.duration} mins"
                   '• ${meal.duration} mins ',
                   style: TextStyle(fontSize: 16),
                 ),

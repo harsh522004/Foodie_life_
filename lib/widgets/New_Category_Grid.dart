@@ -40,11 +40,4 @@ class _NewCategoryGridState extends ConsumerState<NewCategoryGrid> {
       },
     );
   }
-
-  // Move this method outside the build method
 }
-
-
-// category selection method : 
-
-

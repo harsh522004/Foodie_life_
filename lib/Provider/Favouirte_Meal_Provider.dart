@@ -79,7 +79,7 @@ class SavedRecipesProvider extends StateNotifier<List<MealModel>> {
           isGlutenFree: data['isGlutenFree'],
           isLactoseFree: data['isLactoseFree'],
           isVegan: data['isVegan'],
-          isVegetarian: data['isVegetarian'],
+          isVegetarian: data['isVegetarian'], viewCount: data['viewCount'],
         );
       }).toList();
 

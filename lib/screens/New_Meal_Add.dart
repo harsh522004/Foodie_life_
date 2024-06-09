@@ -80,6 +80,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
           'isLactoseFree': mealModel.isLactoseFree,
           'isVegan': mealModel.isVegan,
           'isVegetarian': mealModel.isVegetarian,
+          'viewCount': mealModel.viewCount
         });
 
         // Successfully added to Firestore
@@ -131,7 +132,6 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                     borderRadius: BorderRadius.circular(10.0),
                     borderSide: BorderSide(color: materialColor[600]!),
                   ),
-
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -393,6 +393,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
         isVegan: _isVegan,
         isVegetarian: _isVegetarian,
         id: recipeId,
+        viewCount: 0,
       );
 
       addRecipeToFirestore(mealModel);

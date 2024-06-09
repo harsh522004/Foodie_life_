@@ -58,7 +58,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
   void _onSaved() async {
     final pickedImageFile = ref.read(pickedImageProvider);
 
-    if (pickedImageFile == null) {
+    if (!widget.isLoginScreen && pickedImageFile == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Please select a profile image')),
       );
