@@ -121,10 +121,11 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
 
           20.heightBox,
           // Recipes Grid
-          SizedBox(child: NewRecipesGrid(mealsList: _filteredRecipes))
-              .h(350)
-              .w(context.screenWidth)
-              .pOnly(right: 10)
+          SizedBox(
+              child: NewRecipesGrid(
+            mealsList: _filteredRecipes,
+            sectionTitle: 'Explore Recipes',
+          )).h(350).w(context.screenWidth).pOnly(right: 10)
         ],
       ),
     );

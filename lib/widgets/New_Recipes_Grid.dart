@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodei_life/Models/Meals.dart';
+import 'package:foodei_life/screens/Recipe_Final.dart';
 import 'package:foodei_life/widgets/Meal_card.dart';
 import 'package:foodei_life/widgets/New_Recipe_Card.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -8,10 +9,12 @@ import 'package:velocity_x/velocity_x.dart';
 class NewRecipesGrid extends ConsumerStatefulWidget {
   const NewRecipesGrid({
     super.key,
+    required this.sectionTitle,
     required this.mealsList,
   });
 
   final List<MealModel> mealsList;
+  final String sectionTitle;
 
   @override
   _NewRecipesGridState createState() => _NewRecipesGridState();
@@ -25,7 +28,7 @@ class _NewRecipesGridState extends ConsumerState<NewRecipesGrid> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Explore Recipes",
+          widget.sectionTitle,
           style:
               Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 20),
         ),
