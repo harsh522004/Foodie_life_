@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodei_life/Models/Category_Model.dart';
 import 'package:foodei_life/Models/Meals.dart';
 import 'package:foodei_life/Provider/Filter_Provider.dart';
+import 'package:foodei_life/Provider/Most_Popular_Recipe_provider.dart';
 import 'package:foodei_life/Provider/Serch_bar_provider.dart';
 import 'package:foodei_life/theme/colors.dart';
 import 'package:foodei_life/widgets/Custome_Category_card.dart';
@@ -26,6 +28,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
   bool _initialDataLoaded = false;
   CategoryModel? _selectedCategory;
   List<MealModel> _filteredRecipes = [];
+  List<MealModel> _mostPopularRecipes = [];
 
   // when screen building
   @override
@@ -42,8 +45,18 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
   void _loadInitialData() {
     ref.read(searchProvider.notifier).updateFilteredCategories('');
     _fetchfilteredRecipes();
+    _fetchMostPopularRecipes();
     setState(() {
       _initialDataLoaded = true;
+    });
+  }
+
+  // fetch popular recipes
+  Future<void> _fetchMostPopularRecipes() async {
+    final mostPopularRecipesResult =
+        await ref.read(mostPopularRecipesProvider.future);
+    setState(() {
+      _mostPopularRecipes = mostPopularRecipesResult;
     });
   }
 
@@ -83,6 +96,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
   // build method
   @override
   Widget build(BuildContext context) {
+    final mostPopularRecipesUpdated = ref.watch(mostPopularRecipesProvider);
     // if data not avaliable then loading
     if (!_initialDataLoaded) {
       return Center(
@@ -102,31 +116,47 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
           _scaffoldKeyNew.currentState?.openDrawer();
         },
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          10.heightBox,
-          // upper part
-          NewHomeAboveContent(
-            searchController: _searchController,
-          ),
-          20.heightBox,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            10.heightBox,
+            // upper part
+            NewHomeAboveContent(
+              searchController: _searchController,
+            ),
+            20.heightBox,
 
-          // category grid
-          SizedBox(
-              child: NewCategoryGrid(
-            onCategorySelected: _onCategorySelected,
-            selectedCategory: _selectedCategory,
-          )).h(55).w(context.screenWidth).pOnly(right: 10),
+            // category grid
+            SizedBox(
+                child: NewCategoryGrid(
+              onCategorySelected: _onCategorySelected,
+              selectedCategory: _selectedCategory,
+            )).h(55).w(context.screenWidth).pOnly(right: 10),
 
-          20.heightBox,
-          // Recipes Grid
-          SizedBox(
-              child: NewRecipesGrid(
-            mealsList: _filteredRecipes,
-            sectionTitle: 'Explore Recipes',
-          )).h(350).w(context.screenWidth).pOnly(right: 10)
-        ],
+            20.heightBox,
+            // Recipes Grid
+            SizedBox(
+                child: NewRecipesGrid(
+              mealsList: _filteredRecipes,
+              sectionTitle: 'Explore Recipes',
+            )).h(350).w(context.screenWidth).pOnly(right: 10),
+
+            20.heightBox,
+            mostPopularRecipesUpdated.when(
+              data: (recipes) => SizedBox(
+                child: NewRecipesGrid(
+                  mealsList: recipes,
+                  sectionTitle: 'Most Popular Recipes',
+                ),
+              ).h(350).w(context.screenWidth).pOnly(right: 10),
+              loading: () => Center(child: CircularProgressIndicator()),
+              error: (error, stack) => Center(
+                child: Text('Error: $error'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

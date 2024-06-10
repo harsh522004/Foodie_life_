@@ -97,17 +97,20 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           _emailController.clear();
           _passController.clear();
 
+          await Future.delayed(const Duration(milliseconds: 500));
+
+          context.pushReplacementAll(TabsScreen());
           // Navigate to LoginScreen after successful signup
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => const AuthScreen(
-                title: 'Log In',
-                subtitle: 'Log in to your account',
-                buttonLabel: 'Log In',
-                isLoginScreen: true,
-              ),
-            ),
-          );
+          // Navigator.of(context).pushReplacement(
+          //   MaterialPageRoute(
+          //     builder: (context) => const AuthScreen(
+          //       title: 'Log In',
+          //       subtitle: 'Log in to your account',
+          //       buttonLabel: 'Log In',
+          //       isLoginScreen: true,
+          //     ),
+          //   ),
+          // );
         } else {
           final userCred = await _firebase.signInWithEmailAndPassword(
               email: _emailController.text, password: _passController.text);

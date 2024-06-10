@@ -22,34 +22,32 @@ class _RecipeFinalState extends ConsumerState<RecipeFinal> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
     incrementViewCount(widget.meal.id);
   }
 
   void incrementViewCount(String recipeId) async {
     try {
-      final recipeRef =
-          FirebaseFirestore.instance.collection('recipes').doc(recipeId);
+      // Query to find the document with the specific recipeId
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('recipes')
+          .where('recipeId', isEqualTo: recipeId)
+          .get();
 
-      print("Attempting to increment view count for recipe: $recipeId");
+      if (querySnapshot.docs.isEmpty) {
+        print("Document with recipeId $recipeId does not exist.");
+        return;
+      } else {
+        // There should be exactly one document with the unique recipeId
+        DocumentSnapshot docSnapshot = querySnapshot.docs.first;
+        DocumentReference recipeRef = docSnapshot.reference;
 
-      await FirebaseFirestore.instance.runTransaction((transaction) async {
-        await Future.delayed(Duration(milliseconds: 500));
-        final snapshot = await transaction.get(recipeRef);
+        // Update the view count
+        await recipeRef.update({'viewCount': FieldValue.increment(1)});
 
-        print("Transaction snapshot data: ${snapshot.data()}");
-
-        if (!snapshot.exists) {
-          throw Exception("Recipe does not exist!");
-        }
-
-        int newViewCount = snapshot.data()!['viewCount'] + 1;
-        transaction.update(recipeRef, {'viewCount': newViewCount});
-
-        print("Successfully updated view count to $newViewCount");
-      });
-    } catch (error) {
-      print("Error updating view count: $error");
+        print("Successfully incremented view count for recipe id: $recipeId");
+      }
+    } catch (e) {
+      print("Error updating view count: $e");
     }
   }
 

@@ -6,10 +6,8 @@ import 'package:foodei_life/features/auth/screens/auth.dart';
 import 'package:foodei_life/features/landing/landing_screen.dart';
 import 'package:foodei_life/screens/Home_Screen.dart';
 import 'package:foodei_life/screens/New_Home_screen.dart';
-
 import 'package:foodei_life/screens/Tabs_Screen.dart';
 import 'package:foodei_life/theme/colors.dart';
-
 import 'firebase_options.dart';
 
 void main() async {
@@ -36,14 +34,14 @@ class MyApp extends StatelessWidget {
             ),
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
-        //home: NewHomeScreen());
-        home: StreamBuilder(
-            stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return const TabsScreen();
-              }
-              return const LandingScreen();
-            }));
+        home: NewHomeScreen());
+    // home: StreamBuilder(
+    //     stream: FirebaseAuth.instance.authStateChanges(),
+    //     builder: (context, snapshot) {
+    //       if (snapshot.hasData) {
+    //         return const TabsScreen();
+    //       }
+    //       return const LandingScreen();
+    //     }));
   }
 }
