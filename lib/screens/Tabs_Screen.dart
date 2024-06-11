@@ -1,7 +1,16 @@
+import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:foodei_life/Models/Meals.dart';
+import 'package:foodei_life/Provider/Favouirte_Meal_Provider.dart';
+import 'package:foodei_life/constant/images.dart';
+import 'package:foodei_life/screens/Meals_Screen.dart';
+import 'package:foodei_life/screens/New_Home_screen.dart';
+import 'package:foodei_life/screens/New_saved_Recipe.dart';
 import 'package:foodei_life/theme/colors.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import '../Provider/Filter_Provider.dart';
 import '../widgets/set_Filter.dart';
@@ -23,52 +32,79 @@ class TabsScreen extends ConsumerStatefulWidget {
 }
 
 class _TabsScreenState extends ConsumerState<TabsScreen> {
-  int _selectedPageIndex = 0;
+  final _pageController = PageController(initialPage: 0);
+  final _controller = NotchBottomBarController(index: 0);
+  int maxCount = 3;
 
-  void _selectPage(int index) {
-    setState(() {
-      _selectedPageIndex = index;
-    });
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _pageController.dispose();
   }
+
+  final List<Widget> bottomBarPages = [
+    NewHomeScreen(),
+    AddRecipeScreen(),
+    NewSavedRecipe(),
+  ];
 
   @override
   Widget build(BuildContext context) {
-//final availableMeal = ref.watch(filterMealsProvider);
-
-    Widget activePage(int index) {
-      switch (index) {
-        case 0:
-          return const HomeScreen();
-        case 1:
-          return const AddRecipeScreen();
-        case 2:
-          return const Filter();
-        default:
-          return Container();
-      }
-    }
-
     return Scaffold(
-      extendBody: true,
-      body: activePage(_selectedPageIndex),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.only(bottom: 35),
-        child: DotNavigationBar(
-          backgroundColor: materialColor[50],
-          enableFloatingNavBar: true,
-          dotIndicatorColor: Colors.transparent,
-          marginR: const EdgeInsets.only(bottom: 0, right: 40, left: 40),
-          paddingR: const EdgeInsets.only(bottom: 1, top: 5),
-          itemPadding: const EdgeInsets.symmetric(horizontal: 25, vertical: 13),
-          currentIndex: _selectedPageIndex,
-          onTap: _selectPage,
-          items: <DotNavigationBarItem>[
-            DotNavigationBarItem(icon: const Icon(Icons.category)),
-            DotNavigationBarItem(icon: const Icon(Icons.add)),
-            DotNavigationBarItem(icon: const Icon(Icons.filter_list_alt)),
-          ],
-        ),
+      body: PageView(
+        controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        children: List.generate(
+            bottomBarPages.length, (index) => bottomBarPages[index]),
       ),
+      extendBody: true,
+      bottomNavigationBar: (bottomBarPages.length <= maxCount)
+          ? AnimatedNotchBottomBar(
+              showBlurBottomBar: true,
+              blurOpacity: 0.9,
+              blurFilterX: 5.0,
+              blurFilterY: 10.0,
+              notchColor: hyellow02,
+              notchBottomBarController: _controller,
+              bottomBarItems: [
+                BottomBarItem(
+                  inActiveItem: Icon(
+                    Icons.home_filled,
+                    color: Colors.blueGrey,
+                  ),
+                  activeItem: Icon(Icons.home_filled, color: Colors.black),
+                ),
+                BottomBarItem(
+                  inActiveItem: Icon(
+                    Icons.add,
+                    color: Colors.blueGrey,
+                  ),
+                  activeItem: Icon(
+                    Icons.add,
+                    color: Colors.black,
+                  ),
+                ),
+
+                ///svg item
+                BottomBarItem(
+                  inActiveItem: Icon(
+                    Icons.bookmark,
+                    color: Colors.blueGrey,
+                  ),
+                  activeItem: Icon(
+                    Icons.bookmark,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+              showLabel: false,
+              onTap: (index) {
+                _pageController.jumpToPage(index);
+              },
+              kIconSize: 25,
+              kBottomRadius: 10)
+          : null,
     );
   }
 }

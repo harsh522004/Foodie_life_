@@ -26,3 +26,6 @@ const hAddImage = 'assets/addImage.png';
 // tamp
 const hProfilePic = 'assets/userimage.png';
 const hFilterVartical = 'assets/filter-vertical.svg';
+
+const hsavedRecipeIcon = 'assets/bookmark.png';
+const haddRecipeIcon = ' assets/file.png';

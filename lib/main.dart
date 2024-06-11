@@ -34,14 +34,14 @@ class MyApp extends StatelessWidget {
             ),
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
-        home: NewHomeScreen());
-    // home: StreamBuilder(
-    //     stream: FirebaseAuth.instance.authStateChanges(),
-    //     builder: (context, snapshot) {
-    //       if (snapshot.hasData) {
-    //         return const TabsScreen();
-    //       }
-    //       return const LandingScreen();
-    //     }));
+        // home: NewHomeScreen());
+        home: StreamBuilder(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return const TabsScreen();
+              }
+              return const LandingScreen();
+            }));
   }
 }
