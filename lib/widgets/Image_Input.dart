@@ -59,12 +59,13 @@ class _ImageInputState extends State<ImageInput> {
     Widget content = TextButton.icon(
         onPressed: _takePicture,
         icon: Icon(
+          size: 35,
           Icons.camera_alt,
-          color: materialColor[600],
+          color: Colors.blueGrey,
         ),
         label: Text(
           'Take Picture',
-          style: TextStyle(color: materialColor[600]),
+          style: TextStyle(color: Colors.black, fontSize: 17),
         ));
 
     if (_selectedImage != null) {
@@ -79,7 +80,6 @@ class _ImageInputState extends State<ImageInput> {
       decoration: BoxDecoration(
         border: Border.all(
           width: 1,
-          color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
         ),
       ),
       height: 250,

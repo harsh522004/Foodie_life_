@@ -23,6 +23,8 @@ class NewHomeScreen extends ConsumerStatefulWidget {
 }
 
 class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
+  ScrollController _scrollController = ScrollController();
+  double _blurAmount = 0;
   final GlobalKey<ScaffoldState> _scaffoldKeyNew = GlobalKey<ScaffoldState>();
   final TextEditingController _searchController = TextEditingController();
   bool _initialDataLoaded = false;
@@ -39,6 +41,19 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
     Future.delayed(Duration.zero, () {
       _loadInitialData();
     });
+
+    _scrollController.addListener(() {
+      setState(() {
+        _blurAmount = (_scrollController.offset / 10).clamp(0, 10);
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    // TODO: implement dispose
+    super.dispose();
   }
 
   // load data

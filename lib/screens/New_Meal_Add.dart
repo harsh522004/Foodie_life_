@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +11,7 @@ import 'package:foodei_life/theme/colors.dart';
 import 'package:foodei_life/widgets/Image_Input.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:uuid/uuid.dart';
-
+import 'package:velocity_x/velocity_x.dart';
 import '../Provider/Filter_Provider.dart';
 
 class AddRecipeScreen extends ConsumerStatefulWidget {
@@ -114,11 +116,24 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: hscreenBg,
       appBar: AppBar(
+        flexibleSpace: ClipRRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+            child: Container(
+              color: Colors.transparent,
+            ),
+          ),
+        ),
+        elevation: 0,
+        centerTitle: true,
+        backgroundColor: Colors.white.withAlpha(100),
         title: const Text('Add Recipe'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(5),
         child: Form(
           key: _formKey,
           child: ListView(
@@ -130,7 +145,6 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   labelText: 'Title',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(color: materialColor[600]!),
                   ),
                 ),
                 validator: (value) {
@@ -144,26 +158,33 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                 },
               ),
 
-              SizedBox(height: 10),
+              20.heightBox,
 
               // Categories Dropdown
-              MultiSelectDialogField<CategoryModel>(
-                items: availableCategories
-                    .map((category) => MultiSelectItem<CategoryModel>(
-                          category,
-                          category.title,
-                        ))
-                    .toList(),
-                listType: MultiSelectListType.CHIP,
-                onConfirm: (values) {
-                  setState(() {
-                    _categories =
-                        values.map((category) => category.id).toList();
-                  });
-                },
+              Container(
+                decoration:
+                    BoxDecoration(border: Border.all(color: Colors.black)),
+                child: MultiSelectDialogField<CategoryModel>(
+                  checkColor: Colors.blue,
+                  selectedItemsTextStyle: TextStyle(color: Colors.black),
+                  selectedColor: hyellow02,
+                  items: availableCategories
+                      .map((category) => MultiSelectItem<CategoryModel>(
+                            category,
+                            category.title,
+                          ))
+                      .toList(),
+                  listType: MultiSelectListType.CHIP,
+                  onConfirm: (values) {
+                    setState(() {
+                      _categories =
+                          values.map((category) => category.id).toList();
+                    });
+                  },
+                ),
               ),
 
-              SizedBox(height: 10),
+              20.heightBox,
 
               // Ingredients Input
               TextFormField(
@@ -171,6 +192,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
                 decoration: InputDecoration(
+                  focusColor: hyellow02,
                   labelText: 'Ingredients',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
@@ -188,7 +210,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                 },
               ),
 
-              SizedBox(height: 10),
+              20.heightBox,
               // Steps Input
               TextFormField(
                 controller: _stepsController,
@@ -211,7 +233,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   _steps = value!.split('\n');
                 },
               ),
-              SizedBox(height: 10),
+              20.heightBox,
               // Duration
               TextFormField(
                 controller: _durationController,
@@ -236,10 +258,12 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   _duration = int.parse(value!);
                 },
               ),
-              SizedBox(height: 10),
+
+              30.heightBox,
 
               // Complexity
               DropdownButtonFormField<Complexity>(
+                dropdownColor: materialColor[300],
                 value: _selectedComplexity,
                 onChanged: (value) {
                   setState(() {
@@ -252,7 +276,8 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                           child: Text(complexity.toString().split('.').last),
                         ))
                     .toList(),
-                decoration: const InputDecoration(labelText: 'Complexity'),
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(), labelText: 'Complexity'),
                 validator: (value) {
                   if (value == null) {
                     return 'Please select a complexity';
@@ -260,9 +285,10 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 10),
+              30.heightBox,
               // Affordability
               DropdownButtonFormField<Affordability>(
+                dropdownColor: materialColor[300],
                 value: _selectedAffordability,
                 onChanged: (value) {
                   setState(() {
@@ -275,7 +301,8 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                           child: Text(affordability.toString().split('.').last),
                         ))
                     .toList(),
-                decoration: const InputDecoration(labelText: 'Affordability'),
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(), labelText: 'Affordability'),
                 validator: (value) {
                   if (value == null) {
                     return 'Please select an affordability';
@@ -283,10 +310,11 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 10),
+              20.heightBox,
+
               // Filter Options
               CheckboxListTile(
-                activeColor: materialColor[600],
+                activeColor: Colors.blueGrey,
                 title: const Text('Gluten-Free'),
                 value: _isGlutenFree,
                 onChanged: (value) {
@@ -295,9 +323,9 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   });
                 },
               ),
-              SizedBox(height: 10),
+              20.heightBox,
               CheckboxListTile(
-                activeColor: materialColor[600],
+                activeColor: Colors.blueGrey,
                 title: const Text('Lactose-Free'),
                 value: _isLactoseFree,
                 onChanged: (value) {
@@ -306,9 +334,9 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   });
                 },
               ),
-              SizedBox(height: 10),
+              20.heightBox,
               CheckboxListTile(
-                activeColor: materialColor[600],
+                activeColor: Colors.blueGrey,
                 title: const Text('Vegan'),
                 value: _isVegan,
                 onChanged: (value) {
@@ -317,9 +345,9 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   });
                 },
               ),
-              SizedBox(height: 10),
+              20.heightBox,
               CheckboxListTile(
-                activeColor: materialColor[600],
+                activeColor: Colors.blueGrey,
                 title: const Text('Vegetarian'),
                 value: _isVegetarian,
                 onChanged: (value) {
@@ -328,7 +356,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   });
                 },
               ),
-              SizedBox(height: 10),
+              20.heightBox,
 
               // Image URL Input
               ImageInput(onPickImage: (imageUrl) {
@@ -341,6 +369,12 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
               SizedBox(height: 10),
               // Elevated Button
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blueGrey,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
                 onPressed: () async {
                   // Validate form
                   if (_formKey.currentState!.validate()) {
@@ -353,11 +387,11 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                 },
                 child: Text(
                   'Add Recipe',
-                  style: TextStyle(color: materialColor[600]),
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ],
-          ),
+          ).p(20),
         ),
       ),
     );

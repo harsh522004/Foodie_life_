@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:foodei_life/constant/images.dart';
 import 'package:foodei_life/theme/colors.dart';
@@ -12,7 +14,7 @@ class NewHomeAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white.withAlpha(100),
       actions: [
         GestureDetector(
           onTap: onSideMenuTap,

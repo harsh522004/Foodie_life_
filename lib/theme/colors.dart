@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-MaterialColor materialColor = const MaterialColor(0xFFE64430, {
-  50: Color(0xFFFEF6F5),
-  100: Color(0xFFFDEDEB),
-  200: Color(0xFFF9D1CC),
-  300: Color(0xFFF5B3AB),
-  400: Color(0xFFEE7D6F),
-  500: Color(0xFFE64430),
-  600: Color(0xFFCD3D2B),
-  700: Color(0xFF8A291D),
-  800: Color(0xFF681F16),
-  900: Color(0xFF43140E),
+MaterialColor materialColor = MaterialColor(0xFFEFB31A, {
+  50: Color(0xFFFFFCF4),
+  100: Color(0xFFFEF8E9),
+  200: Color(0xFFFBECC6),
+  300: Color(0xFFF9E0A2),
+  400: Color(0xFFF4CA5F),
+  500: Color(0xFFEFB31A),
+  600: Color(0xFFD5A018),
+  700: Color(0xFF906C10),
+  800: Color(0xFF6C510C),
+  900: Color(0xFF463408),
 });
 
 Color hscreenBg = Vx.hexToColor("fefffa"); //"f5f5f5"); // "fffbe6"
