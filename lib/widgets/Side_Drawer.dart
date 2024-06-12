@@ -10,9 +10,11 @@ import 'package:foodei_life/constant/images.dart';
 import 'package:foodei_life/screens/Meals_Screen.dart';
 
 import 'package:foodei_life/theme/colors.dart';
+import 'package:foodei_life/widgets/Drawer_Clipper.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/components/drawer/gf_drawer.dart';
 import 'package:getwidget/components/drawer/gf_drawer_header.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import '../Models/Meals.dart';
 import '../Provider/Favouirte_Meal_Provider.dart';
@@ -40,20 +42,9 @@ class SideDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print(MediaQuery.sizeOf(context).width * 0.7);
+    print(MediaQuery.sizeOf(context).height);
     final userData = ref.watch(userDataProvider);
-
-    void savedMealsNavigation() {
-      final savedMealsState = ref.watch(savedRecipesProvider);
-
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (ctx) => MealsScreen(
-            mealsList: List<MealModel>.from(savedMealsState),
-            title: 'Saved Meals',
-          ),
-        ),
-      );
-    }
 
     void seetingsNavigation() {
       Navigator.of(context)
@@ -75,48 +66,56 @@ class SideDrawer extends ConsumerWidget {
         String userImage = data['imageUrl']!;
         String userName = data['username'];
         String userEmail = data['email'];
-        return Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-
-              SizedBox(
-                height: 200,
-                child: UserAccountsDrawerHeader(
-
-                  decoration: BoxDecoration(
-                    color: materialColor[400],
-                  ),
-                  accountName: Text(userName, style: TextStyle(fontWeight: FontWeight.w400),),
-
-                  accountEmail: Text(userEmail),
-                  currentAccountPicture: GFAvatar(
-                    radius: 40.0,
-                    backgroundImage: NetworkImage(userImage),
-                  ),
+        return ClipPath(
+          clipper: DrawerClipper(),
+          child: Drawer(
+            width: MediaQuery.sizeOf(context).width * 0.7,
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                Container(
+                  decoration: BoxDecoration(color: hyellow02),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            userName,
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge!
+                                .copyWith(fontSize: 30, color: Vx.black),
+                          ),
+                          Text(userEmail),
+                        ],
+                      ).pOnly(left: 20),
+                      Spacer(),
+                      CircleAvatar(
+                        backgroundImage: NetworkImage(userImage),
+                        radius: 40,
+                      ).pOnly(right: 20),
+                    ],
+                  ).pOnly(top: 70),
+                ).h(220),
+                CustomListTile(
+                  icon: FontAwesomeIcons.bowlFood,
+                  title: 'My Recipes',
+                  onTap: () {},
                 ),
-              ),
-              CustomListTile(
-                icon: FontAwesomeIcons.save,
-                title: 'Saved Meals',
-                onTap: savedMealsNavigation,
-              ),
-              CustomListTile(
-                icon: FontAwesomeIcons.bowlFood,
-                title: 'My Recipes',
-                onTap: () {},
-              ),
-              CustomListTile(
-                icon: Icons.settings,
-                title: 'Settings',
-                onTap: seetingsNavigation,
-              ),
-              CustomListTile(
-                icon: Icons.logout,
-                title: 'Log out',
-                onTap: signOut,
-              ),
-            ],
+                CustomListTile(
+                  icon: Icons.settings,
+                  title: 'Settings',
+                  onTap: seetingsNavigation,
+                ),
+                CustomListTile(
+                  icon: Icons.logout,
+                  title: 'Log out',
+                  onTap: signOut,
+                ),
+              ],
+            ),
           ),
         );
       },

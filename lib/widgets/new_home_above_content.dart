@@ -52,6 +52,9 @@ class NewHomeAboveContent extends ConsumerWidget {
           ).pOnly(left: 20, right: 10);
         },
         error: (error, stackTrace) => Text('Error fetching user data: $error'),
-        loading: () => const CircularProgressIndicator());
+        loading: () => Center(
+                child: CircularProgressIndicator(
+              color: hyellow02,
+            )));
   }
 }
