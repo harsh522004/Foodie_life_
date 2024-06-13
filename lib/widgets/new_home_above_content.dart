@@ -11,10 +11,12 @@ import 'package:velocity_x/velocity_x.dart';
 class NewHomeAboveContent extends ConsumerWidget {
   const NewHomeAboveContent({
     super.key,
+    required this.onFilterChanged,
     required this.searchController,
   });
 
   final TextEditingController searchController;
+  final VoidCallback onFilterChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -46,8 +48,10 @@ class NewHomeAboveContent extends ConsumerWidget {
 
               // search bar
               NewSearchBar(
-                  backgroundColor: hgreyBg,
-                  hintText: "Find your foodie recipes")
+                backgroundColor: hgreyBg,
+                hintText: "Find your foodie recipes",
+                onFilterChanged: onFilterChanged,
+              )
             ],
           ).pOnly(left: 20, right: 10);
         },

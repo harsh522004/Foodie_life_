@@ -22,6 +22,7 @@ const hVeganImage = 'assets/vegan.png';
 const hVegImage = 'assets/Veg.png';
 const hSplashImage = 'assets/Splash.jpg';
 const hAddImage = 'assets/addImage.png';
+const hBulletIcon = "assets/star.png";
 
 // tamp
 const hProfilePic = 'assets/userimage.png';

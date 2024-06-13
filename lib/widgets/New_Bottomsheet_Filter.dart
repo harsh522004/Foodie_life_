@@ -13,6 +13,7 @@ class newFilter extends ConsumerWidget {
     final activeFilter = ref.watch(filterProvider);
     return SingleChildScrollView(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisSize: MainAxisSize
             .min, // Make sure the bottom sheet is as tall as its content
         children: [
@@ -112,6 +113,8 @@ class newFilter extends ConsumerWidget {
               ),
             ),
           ),
+
+          // set buttona
         ],
       ).p(25),
     );

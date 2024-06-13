@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:foodei_life/Models/Meals.dart';
-import 'package:foodei_life/screens/Recipe_Final.dart';
+import 'package:foodei_life/screens/New_Recipe_Final.dart';
 import 'package:foodei_life/theme/colors.dart';
 import 'package:foodei_life/widgets/Tag_container.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -13,7 +13,7 @@ class NewRecipeCard extends StatelessWidget {
 
   void selectMeal(BuildContext context, MealModel meals) {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (ctx) => RecipeFinal(meals)));
+        .push(MaterialPageRoute(builder: (ctx) => NewRecipeFinal(meals)));
   }
 
   String get complexityText {

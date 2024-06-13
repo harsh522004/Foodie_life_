@@ -12,6 +12,7 @@ import 'package:foodei_life/widgets/Image_Input.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:uuid/uuid.dart';
 import 'package:velocity_x/velocity_x.dart';
+
 import '../Provider/Filter_Provider.dart';
 
 class AddRecipeScreen extends ConsumerStatefulWidget {
@@ -133,7 +134,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
         title: const Text('Add Recipe'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: ListView(
@@ -158,7 +159,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                 },
               ),
 
-              20.heightBox,
+              SizedBox(height: 10),
 
               // Categories Dropdown
               Container(
@@ -184,7 +185,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                 ),
               ),
 
-              20.heightBox,
+              SizedBox(height: 10),
 
               // Ingredients Input
               TextFormField(
@@ -192,11 +193,9 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
                 decoration: InputDecoration(
-                  focusColor: hyellow02,
                   labelText: 'Ingredients',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(color: materialColor[600]!),
                   ),
                 ),
                 validator: (value) {
@@ -220,7 +219,6 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   labelText: 'Steps',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(color: materialColor[600]!),
                   ),
                 ),
                 validator: (value) {
@@ -242,7 +240,6 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   labelText: 'Duration (minutes)',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
-                    borderSide: BorderSide(color: materialColor[600]!),
                   ),
                 ),
                 validator: (value) {
@@ -258,10 +255,8 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   _duration = int.parse(value!);
                 },
               ),
-
               30.heightBox,
 
-              // Complexity
               DropdownButtonFormField<Complexity>(
                 dropdownColor: materialColor[300],
                 value: _selectedComplexity,
@@ -347,7 +342,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
               ),
               20.heightBox,
               CheckboxListTile(
-                activeColor: Colors.blueGrey,
+                activeColor: materialColor[600],
                 title: const Text('Vegetarian'),
                 value: _isVegetarian,
                 onChanged: (value) {
@@ -366,7 +361,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   _imageUrlReceived = true;
                 });
               }),
-              SizedBox(height: 10),
+              20.heightBox,
               // Elevated Button
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -391,7 +386,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                 ),
               ),
             ],
-          ).p(20),
+          ),
         ),
       ),
     );
