@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:foodei_life/Common/new_serch_bar.dart';
+import 'package:foodei_life/Provider/Serch_bar_provider.dart';
+import 'package:foodei_life/widgets/new_serch_bar.dart';
 import 'package:foodei_life/Common/serch_bar.dart';
 import 'package:foodei_life/Provider/User_Data_Provider.dart';
 import 'package:foodei_life/theme/colors.dart';
@@ -20,6 +21,7 @@ class NewHomeAboveContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final TextEditingController _searchController = TextEditingController();
     // accessing current user data contunisly
     final userData = ref.watch(userDataProvider);
     return userData.when(
@@ -51,6 +53,12 @@ class NewHomeAboveContent extends ConsumerWidget {
                 backgroundColor: hgreyBg,
                 hintText: "Find your foodie recipes",
                 onFilterChanged: onFilterChanged,
+                searchController: _searchController,
+                onSearchQueryChanged: (String query) {
+                  ref
+                      .read(searchProvider.notifier)
+                      .updateFilteredCategories(query);
+                },
               )
             ],
           ).pOnly(left: 20, right: 10);

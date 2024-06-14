@@ -9,14 +9,16 @@ class NewSearchBar extends StatelessWidget {
   final Color backgroundColor;
   final String hintText;
   final VoidCallback onFilterChanged;
-  //final TextEditingController searchController;
-  //final void Function(String query) onSearchQueryChanged;
+  final TextEditingController searchController;
+  final void Function(String query) onSearchQueryChanged;
 
   const NewSearchBar({
     Key? key,
     required this.backgroundColor,
     required this.hintText,
-    required this.onFilterChanged, //required this.searchController, required this.onSearchQueryChanged,
+    required this.onFilterChanged,
+    required this.searchController,
+    required this.onSearchQueryChanged, //required this.searchController, required this.onSearchQueryChanged,
   }) : super(key: key);
 
   @override
@@ -26,8 +28,8 @@ class NewSearchBar extends StatelessWidget {
         Expanded(
           child: TextField(
             cursorColor: hyellow02,
-            //controller: searchController,
-            //onChanged: onSearchQueryChanged,
+            controller: searchController,
+            onChanged: onSearchQueryChanged,
             decoration: InputDecoration(
               filled: true,
               fillColor: backgroundColor,
