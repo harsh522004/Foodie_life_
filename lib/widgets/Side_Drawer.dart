@@ -8,6 +8,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:foodei_life/Common/List_tile.dart';
 import 'package:foodei_life/constant/images.dart';
 import 'package:foodei_life/screens/Meals_Screen.dart';
+import 'package:foodei_life/screens/New_Recipe_screen.dart';
 
 import 'package:foodei_life/theme/colors.dart';
 import 'package:foodei_life/widgets/Drawer_Clipper.dart';
@@ -42,13 +43,45 @@ class SideDrawer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print(MediaQuery.sizeOf(context).width * 0.7);
-    print(MediaQuery.sizeOf(context).height);
     final userData = ref.watch(userDataProvider);
+    User? user = FirebaseAuth.instance.currentUser;
 
     void seetingsNavigation() {
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (ctx) => const SettingsMenu()));
+    }
+
+    Future<List<MealModel>> fetchUserRecipes(List<String> recipeIds) async {
+      List<MealModel> recipes = [];
+
+      for (String recipeId in recipeIds) {
+        final recipeDoc = await FirebaseFirestore.instance
+            .collection('recipes')
+            .doc(recipeId)
+            .get();
+        if (recipeDoc.exists && recipeDoc.data() != null) {
+          recipes.add(MealModel.fromFirestore(recipeDoc.data()!));
+        }
+      }
+
+      return recipes;
+    }
+
+    Future<void> myRecipes(BuildContext context, String userId) async {
+      final userDoc =
+          await FirebaseFirestore.instance.collection('User').doc(userId).get();
+
+      if (userDoc.exists && userDoc.data() != null) {
+        List<String> myRecipes =
+            List<String>.from(userDoc.data()!['myRecipes']);
+        List<MealModel> recipes = await fetchUserRecipes(myRecipes);
+
+        print("done!\n");
+
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (ctx) =>
+                NewRecipes(sectionTitle: "My Recipes", mealsList: recipes)));
+      }
     }
 
     Future<void> signOut() async {
@@ -88,7 +121,7 @@ class SideDrawer extends ConsumerWidget {
                                 .titleLarge!
                                 .copyWith(fontSize: 30, color: Vx.black),
                           ),
-                          Text(userEmail),
+                          Container(child: Text(userEmail)).w(140),
                         ],
                       ).pOnly(left: 20),
                       Spacer(),
@@ -102,7 +135,9 @@ class SideDrawer extends ConsumerWidget {
                 CustomListTile(
                   icon: FontAwesomeIcons.bowlFood,
                   title: 'My Recipes',
-                  onTap: () {},
+                  onTap: () {
+                    myRecipes(context, user!.uid);
+                  },
                 ),
                 CustomListTile(
                   icon: Icons.settings,

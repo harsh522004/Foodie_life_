@@ -1,20 +1,12 @@
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
-import 'package:dot_navigation_bar/dot_navigation_bar.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:foodei_life/Models/Meals.dart';
-import 'package:foodei_life/Provider/Favouirte_Meal_Provider.dart';
-import 'package:foodei_life/constant/images.dart';
-import 'package:foodei_life/screens/Meals_Screen.dart';
+
 import 'package:foodei_life/screens/New_Home_screen.dart';
 import 'package:foodei_life/screens/New_saved_Recipe.dart';
 import 'package:foodei_life/theme/colors.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 import '../Provider/Filter_Provider.dart';
-import '../widgets/set_Filter.dart';
-import 'Home_Screen.dart';
 import 'New_Meal_Add.dart';
 
 const kInitialFilters = {

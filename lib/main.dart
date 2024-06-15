@@ -26,12 +26,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        // theme: ThemeData(
-        //     primarySwatch: materialColor,
-        //     primaryColor:
-        //         materialColor // Set your materialColor as the primary color
-        //     // Other theme configurations...
-        //     ),
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         // home: NewHomeScreen());

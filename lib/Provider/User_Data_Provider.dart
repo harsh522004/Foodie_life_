@@ -9,18 +9,25 @@ final userDataProvider =
 
     if (user != null) {
       int retryCount = 0;
+      const Duration initialDelay = Duration(milliseconds: 200);
+      Duration delay = initialDelay;
 
       DocumentSnapshot<Map<String, dynamic>>? userData;
+
+      print("provider retry mechansim start\n");
       while (retryCount < 5 && (userData == null || !userData.exists)) {
+        print("retry count is : $retryCount\n");
         userData = await FirebaseFirestore.instance
             .collection('User')
             .doc(user.uid)
             .get();
         if (!userData.exists) {
-          await Future.delayed(const Duration(milliseconds: 200));
+          await Future.delayed(delay);
+          delay *= 2;
         }
         retryCount++;
       }
+      print("retry loop exitst\n");
       if (userData != null && userData.exists) {
         return userData.data()!;
       } else {

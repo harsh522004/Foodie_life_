@@ -33,6 +33,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
   void initState() {
     super.initState();
 
+    print("Init Method of Home screen called\n");
     // Load initial data for displayedCategories
     Future.delayed(Duration.zero, () {
       _loadInitialData();
@@ -110,6 +111,8 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
   // build method
   @override
   Widget build(BuildContext context) {
+
+    
     final mostPopularRecipesUpdated = ref.watch(mostPopularRecipesProvider);
     // if data not avaliable then loading
     if (!_initialDataLoaded) {

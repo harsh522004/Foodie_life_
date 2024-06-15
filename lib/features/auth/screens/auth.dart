@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodei_life/Common/elevated_button.dart';
 import 'package:foodei_life/Common/user_profile_image.dart';
+import 'package:foodei_life/Provider/User_Data_Provider.dart';
 import 'package:foodei_life/Provider/profile_image_provider.dart';
 import 'package:foodei_life/constant/images.dart';
 import 'package:foodei_life/screens/Tabs_Screen.dart';
@@ -14,6 +16,7 @@ import 'package:foodei_life/theme/text_theme.dart';
 
 final _firebase = FirebaseAuth.instance;
 
+// global method for navigation
 extension NavigationExtensions on BuildContext {
   void pushReplacementAll(Widget newRoute) {
     Navigator.of(this).pushAndRemoveUntil(
@@ -42,6 +45,7 @@ class AuthScreen extends ConsumerStatefulWidget {
 }
 
 class _AuthScreenState extends ConsumerState<AuthScreen> {
+  // detail variable
   final _form = GlobalKey<FormState>();
 
   final _emailController = TextEditingController();
@@ -63,19 +67,28 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         SnackBar(content: Text('Please select a profile image')),
       );
     } else {
+      // form validation
       final isValid = _form.currentState!.validate();
       if (!isValid || (!widget.isLoginScreen && _selectedImage == null)) {
         return;
       }
+
+      // save the current state of form
       _form.currentState!.save();
+
       try {
+        // start loading to button .....
         setState(() {
           _isAuthentication = true;
         });
+
+        // process start for Sing up screen
+
         if (!widget.isLoginScreen) {
           final userCred = await _firebase.createUserWithEmailAndPassword(
               email: _emailController.text, password: _passController.text);
 
+          // get image url
           final storageRef = FirebaseStorage.instance
               .ref()
               .child('User_Images')
@@ -83,39 +96,38 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
           await storageRef.putFile(_selectedImage!);
           final userImageUrl = await storageRef.getDownloadURL();
 
-          await FirebaseFirestore.instance
-              .collection('User')
-              .doc(userCred.user!.uid)
-              .set({
+          // create user to collection
+
+          CollectionReference userCollection =
+              FirebaseFirestore.instance.collection('User');
+
+          await userCollection.doc(userCred.user!.uid).set({
             'username': _usernameController.text,
             'email': _emailController.text,
             'imageUrl': userImageUrl,
             'savedRecipes': [],
+            'myRecipes': [],
           });
 
-          _usernameController.clear();
-          _emailController.clear();
-          _passController.clear();
+          final DocumentSnapshot userDataSnapshot =
+              await userCollection.doc(userCred.user!.uid).get();
 
-          await Future.delayed(const Duration(milliseconds: 500));
+          final userData = userDataSnapshot.data();
+
+          // print the userData
+          print(userData);
+
+          print("user data added successfully\n");
+
+          // ignore: unused_result
+          ref.refresh(userDataProvider);
 
           context.pushReplacementAll(TabsScreen());
-          // Navigate to LoginScreen after successful signup
-          // Navigator.of(context).pushReplacement(
-          //   MaterialPageRoute(
-          //     builder: (context) => const AuthScreen(
-          //       title: 'Log In',
-          //       subtitle: 'Log in to your account',
-          //       buttonLabel: 'Log In',
-          //       isLoginScreen: true,
-          //     ),
-          //   ),
-          // );
         } else {
-          final userCred = await _firebase.signInWithEmailAndPassword(
+          await _firebase.signInWithEmailAndPassword(
               email: _emailController.text, password: _passController.text);
-          _emailController.clear();
-          _passController.clear();
+          _emailController.dispose();
+          _passController.dispose();
 
           context.pushReplacementAll(TabsScreen());
 

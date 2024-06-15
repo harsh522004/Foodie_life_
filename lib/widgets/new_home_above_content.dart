@@ -24,6 +24,8 @@ class NewHomeAboveContent extends ConsumerWidget {
     final TextEditingController _searchController = TextEditingController();
     // accessing current user data contunisly
     final userData = ref.watch(userDataProvider);
+
+    print("user data on home above content : $userData");
     return userData.when(
         data: (data) {
           String username = data['username'];

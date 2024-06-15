@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -23,24 +24,20 @@ class AddRecipeScreen extends ConsumerStatefulWidget {
 }
 
 class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
-  // Inside your function or class
+// Inside your function or class
   String generateUniqueId() {
     var uuid = const Uuid();
     return uuid.v4();
   }
 
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _ingredientsController = TextEditingController();
-  final TextEditingController _stepsController = TextEditingController();
-  final TextEditingController _durationController = TextEditingController();
 
-  // Variables to store form input
+// Variables to store form input
   String recipeId = '';
   bool _imageUrlReceived = false;
   String _imageUrl = '';
   final CategoryModel _category = availableCategories[0];
-  late List<String> _categories = [availableCategories[0].id];
+  List<String> _categories = [availableCategories[0].id];
   List<String> _ingredients = [];
   List<String> _steps = [];
   int _duration = 0;
@@ -51,13 +48,17 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
   bool _isVegan = false;
   bool _isVegetarian = false;
 
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _ingredientsController = TextEditingController();
+  final TextEditingController _stepsController = TextEditingController();
+  final TextEditingController _durationController = TextEditingController();
   Future<void> addRecipeToFirestore(MealModel mealModel) async {
     try {
-      // Get the current user
+// Get the current user
       User? user = FirebaseAuth.instance.currentUser;
 
       if (user != null) {
-        // Firestore collection reference for recipes
+// Firestore collection reference for recipes
         CollectionReference recipesCollection =
             FirebaseFirestore.instance.collection('recipes');
         String tamp = mealModel.imageUrl;
@@ -67,8 +68,8 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
 
         print('Adding recipe to Firestore with imageUrl: $tamp');
 
-        // Add recipe data to Firestore
-        await recipesCollection.add({
+// Add recipe data to Firestore
+        final recipeDocRef = await recipesCollection.add({
           'userId': user.uid, // Add the user ID
           'recipeId': mealModel.id,
           'categories': mealModel.categories,
@@ -86,16 +87,25 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
           'viewCount': mealModel.viewCount
         });
 
-        // Successfully added to Firestore
+        
+
+// Successfully added to Firestore
         print('Recipe added to Firestore successfully!');
+
+        final userDocRef =
+            FirebaseFirestore.instance.collection('User').doc(user.uid);
+
+        await userDocRef.update({
+          'myRecipes': FieldValue.arrayUnion([recipeDocRef.id]),
+        });
         ref.refresh(filterMealsProvider);
       } else {
-        // User not logged in
+// User not logged in
         throw Exception('User Not Logged in.');
       }
     } catch (e) {
       print("Error occur : $e");
-      // Handle errors
+// Handle errors
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error adding recipe to Firestore: $e'),
@@ -108,10 +118,20 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
   @override
   void initState() {
     super.initState();
-    _titleController.text = _titleController.text;
-    _ingredientsController.text = _ingredients.join('\n');
-    _stepsController.text = _steps.join('\n');
-    _durationController.text = _duration.toString();
+    // _titleController.text = _titleController.text;
+    // _ingredientsController.text = _ingredients.join('\n');
+    // _stepsController.text = _steps.join('\n');
+    // _durationController.text = _duration.toString();
+  }
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _ingredientsController.dispose();
+    _stepsController.dispose();
+    _durationController.dispose();
+// TODO: implement dispose
+    super.dispose();
   }
 
   @override
@@ -139,7 +159,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
           key: _formKey,
           child: ListView(
             children: [
-              // Title Input
+// Title Input
               TextFormField(
                 controller: _titleController,
                 decoration: InputDecoration(
@@ -161,7 +181,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
 
               SizedBox(height: 10),
 
-              // Categories Dropdown
+// Categories Dropdown
               Container(
                 decoration:
                     BoxDecoration(border: Border.all(color: Colors.black)),
@@ -187,7 +207,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
 
               SizedBox(height: 10),
 
-              // Ingredients Input
+// Ingredients Input
               TextFormField(
                 controller: _ingredientsController,
                 maxLines: null,
@@ -205,12 +225,14 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   return null;
                 },
                 onSaved: (value) {
+                  print('Raw value in onSaved: $value');
                   _ingredients = value!.split('\n');
+                  print('Ingredients after split: $_ingredients');
                 },
               ),
 
               20.heightBox,
-              // Steps Input
+// Steps Input
               TextFormField(
                 controller: _stepsController,
                 maxLines: null,
@@ -232,7 +254,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                 },
               ),
               20.heightBox,
-              // Duration
+// Duration
               TextFormField(
                 controller: _durationController,
                 keyboardType: TextInputType.number,
@@ -281,7 +303,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                 },
               ),
               30.heightBox,
-              // Affordability
+// Affordability
               DropdownButtonFormField<Affordability>(
                 dropdownColor: materialColor[300],
                 value: _selectedAffordability,
@@ -307,7 +329,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
               ),
               20.heightBox,
 
-              // Filter Options
+// Filter Options
               CheckboxListTile(
                 activeColor: Colors.blueGrey,
                 title: const Text('Gluten-Free'),
@@ -353,7 +375,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
               ),
               20.heightBox,
 
-              // Image URL Input
+// Image URL Input
               ImageInput(onPickImage: (imageUrl) {
                 print('Received imageUrl: $imageUrl');
                 setState(() {
@@ -362,7 +384,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                 });
               }),
               20.heightBox,
-              // Elevated Button
+// Elevated Button
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blueGrey,
@@ -371,12 +393,18 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                   ),
                 ),
                 onPressed: () async {
-                  // Validate form
-                  if (_formKey.currentState!.validate()) {
+// Validate form
+                  if (_formKey.currentState?.validate() == true) {
                     while (!_imageUrlReceived) {
                       await Future.delayed(const Duration(milliseconds: 100));
                     }
-                    // Save the recipe and update UI
+                    _formKey.currentState!.save();
+                    _ingredients = _ingredientsController.text.split("\n");
+                    print(
+                      "ingredient value ${_ingredientsController.text.toString()}",
+                    );
+                    print('Ingredients after form saved: $_ingredients');
+// Save the recipe and update UI
                     _saveRecipe();
                   }
                 },
@@ -395,18 +423,21 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
   Future<void> _saveRecipe() async {
     if (_formKey.currentState!.validate()) {
       if (_imageUrl.isEmpty) {
-        // Handle the case when imageUrl is empty
+// Handle the case when imageUrl is empty
         print('Image URL is empty. Recipe not saved.');
         return;
       }
 
-      // Wait for the imageUrl to be updated
+// Wait for the imageUrl to be updated
 
-      _formKey.currentState!.save();
+      //_formKey.currentState!.save();
 
       recipeId = generateUniqueId();
 
-      print('Set Image Url is : $_imageUrl');
+// here i got nothing
+
+      print("Now Let's check ingredients in _saveRecipe: " +
+          _ingredients.toString());
 
       final mealModel = MealModel(
         categories: _categories,

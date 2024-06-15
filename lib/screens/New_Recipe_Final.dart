@@ -101,8 +101,8 @@ class _RecipeFinalState extends ConsumerState<NewRecipeFinal> {
                   SnackBar(
                     content: Text(
                       wasAdded
-                          ? 'Meal added as a favorite'
-                          : 'Meal removed successfully',
+                          ? 'recipe saved successfully'
+                          : 'recipe removed successfully from saved',
                       style: TextStyle(fontSize: 16),
                     ),
                   ),

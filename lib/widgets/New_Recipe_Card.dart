@@ -104,7 +104,7 @@ class NewRecipeCard extends StatelessWidget {
             ),
           ],
         ),
-      ).pOnly(right: 20),
+      ).h(300).w(310).pOnly(right: 20),
     );
   }
 }

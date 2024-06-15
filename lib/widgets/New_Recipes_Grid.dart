@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodei_life/Models/Meals.dart';
-import 'package:foodei_life/screens/Recipe_Final.dart';
-import 'package:foodei_life/widgets/Meal_card.dart';
 import 'package:foodei_life/widgets/New_Recipe_Card.dart';
 import 'package:velocity_x/velocity_x.dart';
 

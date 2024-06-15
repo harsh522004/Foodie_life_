@@ -22,7 +22,6 @@ class LandingScreen extends StatelessWidget {
                   isLoginScreen: false)));
 
     }
-    final width = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: materialColor[500],
       body: Stack(
