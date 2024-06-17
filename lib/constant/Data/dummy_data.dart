@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:foodei_life/Models/Meals.dart';
 import 'package:foodei_life/Models/Category_Model.dart';
 import 'package:foodei_life/constant/images.dart';
-
 
 List<CategoryModel> availableCategories = [
   CategoryModel(

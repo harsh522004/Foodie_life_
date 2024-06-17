@@ -1,24 +1,17 @@
-import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:foodei_life/Common/List_tile.dart';
-import 'package:foodei_life/constant/images.dart';
-import 'package:foodei_life/screens/Meals_Screen.dart';
+
 import 'package:foodei_life/screens/New_Recipe_screen.dart';
 
 import 'package:foodei_life/theme/colors.dart';
 import 'package:foodei_life/widgets/Drawer_Clipper.dart';
-import 'package:getwidget/components/avatar/gf_avatar.dart';
-import 'package:getwidget/components/drawer/gf_drawer.dart';
-import 'package:getwidget/components/drawer/gf_drawer_header.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../Models/Meals.dart';
-import '../Provider/Favouirte_Meal_Provider.dart';
 import '../Provider/User_Data_Provider.dart';
 import '../screens/settings.dart';
 

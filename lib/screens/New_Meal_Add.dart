@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -144,8 +143,6 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
     // _stepsController.text = _steps.join('\n');
     // _durationController.text = _duration.toString();
   }
-
-  
 
   @override
   Widget build(BuildContext context) {

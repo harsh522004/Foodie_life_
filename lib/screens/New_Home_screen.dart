@@ -13,7 +13,6 @@ import 'package:foodei_life/widgets/New_Recipes_Grid.dart';
 import 'package:foodei_life/widgets/Side_Drawer.dart';
 import 'package:foodei_life/widgets/new_home_above_content.dart';
 import 'package:foodei_life/widgets/new_home_appBar.dart';
-import 'package:foodei_life/widgets/shimmer_widget.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class NewHomeScreen extends ConsumerStatefulWidget {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:foodei_life/Models/Category_Model.dart';
-import 'package:foodei_life/constant/images.dart';
 import 'package:foodei_life/theme/colors.dart';
 import 'package:velocity_x/velocity_x.dart';
 

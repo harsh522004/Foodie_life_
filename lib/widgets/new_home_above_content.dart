@@ -6,7 +6,6 @@ import 'package:foodei_life/widgets/new_serch_bar.dart';
 import 'package:foodei_life/Provider/User_Data_Provider.dart';
 import 'package:foodei_life/theme/colors.dart';
 import 'package:foodei_life/widgets/cutome_text.dart';
-import 'package:foodei_life/widgets/shimmer_widget.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class NewHomeAboveContent extends ConsumerWidget {
