@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:foodei_life/Common/elevated_button.dart';
 import 'package:foodei_life/Common/user_profile_image.dart';
 import 'package:foodei_life/Provider/User_Data_Provider.dart';
@@ -265,8 +266,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                           ),
                           errorStyle: const TextStyle(color: Colors.white),
                           hintText: 'Username',
-                          prefixIcon:
-                              const Icon(Icons.email, color: Colors.black),
+                          prefixIcon: const Icon(FontAwesomeIcons.user,
+                              color: Colors.black),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(18),
                           ),
@@ -299,8 +300,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                         ),
                         errorStyle: const TextStyle(color: Colors.white),
                         hintText: 'Email',
-                        prefixIcon:
-                            const Icon(Icons.email, color: Colors.black),
+                        prefixIcon: const Icon(FontAwesomeIcons.envelope,
+                            color: Colors.black),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(18),
                         ),
@@ -332,8 +333,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                         ),
                         errorStyle: const TextStyle(color: Colors.white),
                         hintText: 'Password',
-                        prefixIcon:
-                            const Icon(Icons.email, color: Colors.black),
+                        prefixIcon: const Icon(FontAwesomeIcons.key,
+                            color: Colors.black),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(18),
                         ),

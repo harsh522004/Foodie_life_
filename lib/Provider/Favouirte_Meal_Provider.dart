@@ -43,6 +43,8 @@ class SavedRecipesProvider extends StateNotifier<List<MealModel>> {
       'savedRecipes': savedRecipeIds,
     });
 
+    fetchSavedRecipes(user);
+
     print('Saved recipes updated successfully. Recipe IDs: $savedRecipeIds');
   }
 

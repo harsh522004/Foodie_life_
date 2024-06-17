@@ -85,13 +85,13 @@ class _SettingsMenuState extends ConsumerState<SettingsMenu> {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        await user.updateProfile(displayName: newUsername);
+        await user.updateDisplayName(newUsername);
         await FirebaseFirestore.instance
             .collection('User')
             .doc(user.uid)
             .update({'username': newUsername});
         showSnackBar(context, 'Username updated successfully!');
-        ref.watch(userDataProvider);
+        ref.refresh(userDataProvider);
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => TabsScreen()),
@@ -130,16 +130,20 @@ class _SettingsMenuState extends ConsumerState<SettingsMenu> {
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () {
-              if (!_loading) {
-                // Update the username in Firebase and close the dialog
-                updateUsername(newUsernameController.text);
-                Navigator.pop(context);
-              }
-            },
-            child: const Text('Save'),
-          ),
+          _loading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : TextButton(
+                  onPressed: () {
+                    if (!_loading) {
+                      // Update the username in Firebase and close the dialog
+                      updateUsername(newUsernameController.text);
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: const Text('Save'),
+                ),
         ],
       ),
     );

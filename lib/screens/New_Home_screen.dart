@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodei_life/Models/Category_Model.dart';
 import 'package:foodei_life/Models/Meals.dart';
+import 'package:foodei_life/Provider/Favouirte_Meal_Provider.dart';
 import 'package:foodei_life/Provider/Filter_Provider.dart';
 import 'package:foodei_life/Provider/Most_Popular_Recipe_provider.dart';
 import 'package:foodei_life/Provider/Serch_bar_provider.dart';
@@ -46,6 +48,10 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
     ref.read(searchProvider.notifier).updateFilteredCategories('');
     _fetchfilteredRecipes();
     _fetchMostPopularRecipes();
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      ref.read(savedRecipesProvider.notifier).fetchSavedRecipes(user);
+    }
     setState(() {
       _initialDataLoaded = true;
     });
