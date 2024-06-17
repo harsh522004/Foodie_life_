@@ -23,6 +23,8 @@ class _NewRecipesState extends ConsumerState<NewRecipes> {
   Widget build(BuildContext context) {
     final List<MealModel> recipesList = widget.mealsList;
 
+    print("saved screen list is : $recipesList\n");
+
     Widget content = const Text("Loading....");
     if (recipesList.isNotEmpty) {
       content = Expanded(

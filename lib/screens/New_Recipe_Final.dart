@@ -24,8 +24,6 @@ class _RecipeFinalState extends ConsumerState<NewRecipeFinal> {
     incrementViewCount(widget.meal.id);
   }
 
-  
-
   void incrementViewCount(String recipeId) async {
     try {
       // Query to find the document with the specific recipeId

@@ -12,9 +12,9 @@ class NewSavedRecipe extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     print("saved Recipes screen called \n");
     final savedMealsState = ref.watch(savedRecipesProvider);
-    final List<MealModel> mealsList = savedMealsState;
 
     return NewRecipes(
-        sectionTitle: "Your Favourite Recipes", mealsList: mealsList);
+        sectionTitle: "Your Favourite Recipes",
+        mealsList: List<MealModel>.from(savedMealsState));
   }
 }
