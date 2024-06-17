@@ -34,7 +34,7 @@ class CustomeCategoryCard extends StatelessWidget {
         selectedCategory.title,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: TextStyle(fontSize: 10),
+        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
       ).pOnly(bottom: 5),
       selectedTileColor: hyellow02,
     ).w(150).pOnly(left: 10);

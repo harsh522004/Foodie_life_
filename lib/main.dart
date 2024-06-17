@@ -2,12 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:foodei_life/features/auth/screens/auth.dart';
 import 'package:foodei_life/features/landing/landing_screen.dart';
-import 'package:foodei_life/screens/Home_Screen.dart';
-import 'package:foodei_life/screens/New_Home_screen.dart';
 import 'package:foodei_life/screens/Tabs_Screen.dart';
-import 'package:foodei_life/theme/colors.dart';
 import 'firebase_options.dart';
 
 void main() async {

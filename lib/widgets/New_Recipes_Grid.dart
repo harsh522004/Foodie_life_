@@ -37,6 +37,7 @@ class _NewRecipesGridState extends ConsumerState<NewRecipesGrid> {
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               return NewRecipeCard(
+                isFullWidth: false,
                 meals: recipesList[index],
               );
             },

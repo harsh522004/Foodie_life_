@@ -1,12 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodei_life/Provider/Serch_bar_provider.dart';
+import 'package:foodei_life/widgets/build_home_shimmer.dart';
 import 'package:foodei_life/widgets/new_serch_bar.dart';
-import 'package:foodei_life/Common/serch_bar.dart';
 import 'package:foodei_life/Provider/User_Data_Provider.dart';
 import 'package:foodei_life/theme/colors.dart';
 import 'package:foodei_life/widgets/cutome_text.dart';
+import 'package:foodei_life/widgets/shimmer_widget.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class NewHomeAboveContent extends ConsumerWidget {
@@ -26,10 +26,11 @@ class NewHomeAboveContent extends ConsumerWidget {
     final userData = ref.watch(userDataProvider);
 
     print("user data on home above content : $userData");
+
     return userData.when(
         data: (data) {
           String username = data['username'];
-          String userImage = data['imageUrl']!;
+          //String userImage = data['imageUrl']!;
 
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,7 +54,7 @@ class NewHomeAboveContent extends ConsumerWidget {
               // search bar
               NewSearchBar(
                 backgroundColor: hgreyBg,
-                hintText: "Find your foodie recipes",
+                hintText: "Find your Category",
                 onFilterChanged: onFilterChanged,
                 searchController: _searchController,
                 onSearchQueryChanged: (String query) {
@@ -66,9 +67,6 @@ class NewHomeAboveContent extends ConsumerWidget {
           ).pOnly(left: 20, right: 10);
         },
         error: (error, stackTrace) => Text('Error fetching user data: $error'),
-        loading: () => Center(
-                child: CircularProgressIndicator(
-              color: hyellow02,
-            )));
+        loading: () => Center(child: HomeShimmer()));
   }
 }

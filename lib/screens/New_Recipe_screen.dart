@@ -31,8 +31,9 @@ class _NewRecipesState extends ConsumerState<NewRecipes> {
           scrollDirection: Axis.vertical,
           itemBuilder: (context, index) {
             return NewRecipeCard(
+              isFullWidth: true,
               meals: recipesList[index],
-            ).pOnly(right: 66, left: 20, top: 20);
+            );
           },
         ),
       ).pOnly(left: 10);

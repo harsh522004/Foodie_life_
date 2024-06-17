@@ -11,6 +11,7 @@ import 'package:foodei_life/widgets/New_Recipes_Grid.dart';
 import 'package:foodei_life/widgets/Side_Drawer.dart';
 import 'package:foodei_life/widgets/new_home_above_content.dart';
 import 'package:foodei_life/widgets/new_home_appBar.dart';
+import 'package:foodei_life/widgets/shimmer_widget.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class NewHomeScreen extends ConsumerStatefulWidget {
@@ -111,14 +112,12 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
   // build method
   @override
   Widget build(BuildContext context) {
-
-    
     final mostPopularRecipesUpdated = ref.watch(mostPopularRecipesProvider);
     // if data not avaliable then loading
     if (!_initialDataLoaded) {
       return Center(
           child: const CircularProgressIndicator(
-        color: Colors.yellow,
+        color: Colors.brown,
       )); // Or any loading indicator
     }
 
@@ -140,7 +139,8 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               10.heightBox,
-              // upper part
+
+              //upper part
               NewHomeAboveContent(
                 searchController: _searchController,
                 onFilterChanged: _fetchfilteredRecipes,
@@ -155,6 +155,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
               )).h(55).w(context.screenWidth).pOnly(right: 10),
 
               20.heightBox,
+
               // Recipes Grid
               SizedBox(
                   child: NewRecipesGrid(
@@ -162,6 +163,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                 sectionTitle: 'Explore Recipes',
               )).h(350).w(context.screenWidth).pOnly(right: 10),
 
+              // most viewd recipe
               20.heightBox,
               mostPopularRecipesUpdated.when(
                 data: (recipes) => SizedBox(
@@ -170,7 +172,8 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
                     sectionTitle: 'Most Popular Recipes',
                   ),
                 ).h(350).w(context.screenWidth).pOnly(right: 10),
-                loading: () => Center(child: CircularProgressIndicator()),
+                loading: () =>
+                    Center(child: CircularProgressIndicator(color: hyellow02)),
                 error: (error, stack) => Center(
                   child: Text('Error: $error'),
                 ),

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodei_life/Models/Category_Model.dart';
-import 'package:foodei_life/Provider/Filter_Provider.dart';
 import 'package:foodei_life/Provider/Serch_bar_provider.dart';
-import 'package:foodei_life/screens/Meals_Screen.dart';
 import 'package:foodei_life/widgets/Custome_Category_card.dart';
 
 class NewCategoryGrid extends ConsumerStatefulWidget {

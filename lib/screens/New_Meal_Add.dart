@@ -47,6 +47,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
   bool _isLactoseFree = false;
   bool _isVegan = false;
   bool _isVegetarian = false;
+  bool _isSaving = false;
 
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _ingredientsController = TextEditingController();
@@ -87,8 +88,6 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
           'viewCount': mealModel.viewCount
         });
 
-        
-
 // Successfully added to Firestore
         print('Recipe added to Firestore successfully!');
 
@@ -99,12 +98,34 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
           'myRecipes': FieldValue.arrayUnion([recipeDocRef.id]),
         });
         ref.refresh(filterMealsProvider);
+
+        _titleController.clear();
+        _ingredientsController.clear();
+        _stepsController.clear();
+        _durationController.clear();
+
+        setState(() {
+          _isSaving = false;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Recipe sucessfully added'),
+            duration: const Duration(seconds: 5),
+          ),
+        );
       } else {
 // User not logged in
+        setState(() {
+          _isSaving = false;
+        });
         throw Exception('User Not Logged in.');
       }
     } catch (e) {
       print("Error occur : $e");
+      setState(() {
+        _isSaving = false;
+      });
 // Handle errors
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -124,15 +145,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
     // _durationController.text = _duration.toString();
   }
 
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _ingredientsController.dispose();
-    _stepsController.dispose();
-    _durationController.dispose();
-// TODO: implement dispose
-    super.dispose();
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +172,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
           key: _formKey,
           child: ListView(
             children: [
-// Title Input
+              // Title Input
               TextFormField(
                 controller: _titleController,
                 decoration: InputDecoration(
@@ -181,7 +194,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
 
               SizedBox(height: 10),
 
-// Categories Dropdown
+              // Categories Dropdown
               Container(
                 decoration:
                     BoxDecoration(border: Border.all(color: Colors.black)),
@@ -207,7 +220,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
 
               SizedBox(height: 10),
 
-// Ingredients Input
+              // Ingredients Input
               TextFormField(
                 controller: _ingredientsController,
                 maxLines: null,
@@ -232,7 +245,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
               ),
 
               20.heightBox,
-// Steps Input
+              // Steps Input
               TextFormField(
                 controller: _stepsController,
                 maxLines: null,
@@ -364,7 +377,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
               ),
               20.heightBox,
               CheckboxListTile(
-                activeColor: materialColor[600],
+                activeColor: Colors.blueGrey,
                 title: const Text('Vegetarian'),
                 value: _isVegetarian,
                 onChanged: (value) {
@@ -394,6 +407,9 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                 ),
                 onPressed: () async {
 // Validate form
+                  setState(() {
+                    _isSaving = true;
+                  });
                   if (_formKey.currentState?.validate() == true) {
                     while (!_imageUrlReceived) {
                       await Future.delayed(const Duration(milliseconds: 100));
@@ -408,10 +424,14 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
                     _saveRecipe();
                   }
                 },
-                child: Text(
-                  'Add Recipe',
-                  style: TextStyle(color: Colors.white),
-                ),
+                child: _isSaving
+                    ? CircularProgressIndicator(
+                        color: hyellow02,
+                      )
+                    : Text(
+                        'Add Recipe',
+                        style: TextStyle(color: Colors.white),
+                      ),
               ),
             ],
           ),
