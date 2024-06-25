@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:foodei_life/features/landing/landing_screen.dart';
 import 'package:foodei_life/screens/Tabs_Screen.dart';
+import 'package:foodei_life/theme/colors.dart';
+import 'package:velocity_x/velocity_x.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -22,6 +24,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        theme: MyTheme.lightTheme,
+        darkTheme: MyTheme.darkTheme,
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         // home: NewHomeScreen());

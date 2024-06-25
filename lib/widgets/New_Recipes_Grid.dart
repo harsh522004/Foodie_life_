@@ -27,8 +27,7 @@ class _NewRecipesGridState extends ConsumerState<NewRecipesGrid> {
       children: [
         Text(
           widget.sectionTitle,
-          style:
-              Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 20),
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 20),
         ),
         10.heightBox,
         Expanded(

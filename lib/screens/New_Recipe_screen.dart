@@ -51,7 +51,7 @@ class _NewRecipesState extends ConsumerState<NewRecipes> {
         backgroundColor: Colors.transparent,
         title: Text(widget.sectionTitle),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: content,
     );
   }

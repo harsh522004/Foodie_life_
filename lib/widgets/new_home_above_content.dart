@@ -37,10 +37,10 @@ class NewHomeAboveContent extends ConsumerWidget {
               // username text
               Text(
                 "Hi, $username",
-                style: TextStyle(
-                    fontSize: 18,
-                    color: htextgreayColor,
-                    fontWeight: FontWeight.bold),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium!
+                    .copyWith(fontSize: 18),
               ),
 
               10.heightBox,
@@ -52,7 +52,7 @@ class NewHomeAboveContent extends ConsumerWidget {
 
               // search bar
               NewSearchBar(
-                backgroundColor: hgreyBg,
+                backgroundColor: Theme.of(context).shadowColor,
                 hintText: "Find your Category",
                 onFilterChanged: onFilterChanged,
                 searchController: _searchController,

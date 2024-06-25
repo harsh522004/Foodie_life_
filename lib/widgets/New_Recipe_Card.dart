@@ -47,7 +47,8 @@ class NewRecipeCard extends StatelessWidget {
             right: 0, // Centers the inner container horizontally
             child: Container(
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(14), color: Vx.white),
+                  borderRadius: BorderRadius.circular(14),
+                  color: Theme.of(context).canvasColor),
               child: Center(
                 // Centers the text within the inner container
                 child: Column(
@@ -75,7 +76,10 @@ class NewRecipeCard extends StatelessWidget {
                         const SizedBox(width: 6),
                         Text(
                           '${meals.duration} min',
-                          style: TextStyle(color: htextgreayColor),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(fontSize: 14),
                         )
                       ],
                     ),

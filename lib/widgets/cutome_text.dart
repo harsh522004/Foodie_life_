@@ -8,11 +8,12 @@ class CustomText extends StatelessWidget {
     return RichText(
       text: TextSpan(
         text: "Make your own food,\n",
-        style: TextStyle(
-          color: Vx.black,
-          fontSize: 35,
-          fontWeight: FontWeight.w900, // Extra bold
-        ),
+        style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontSize: 30),
+        // style: TextStyle(
+        //   color: Vx.black,
+        //   fontSize: 35,
+        //   fontWeight: FontWeight.w900, // Extra bold
+        // ),
         children: <TextSpan>[
           TextSpan(
             text: 'stay at ',

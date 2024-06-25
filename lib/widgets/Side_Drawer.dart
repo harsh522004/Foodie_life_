@@ -95,6 +95,7 @@ class SideDrawer extends ConsumerWidget {
         return ClipPath(
           clipper: DrawerClipper(),
           child: Drawer(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             width: MediaQuery.sizeOf(context).width * 0.7,
             child: ListView(
               padding: EdgeInsets.zero,
@@ -114,7 +115,14 @@ class SideDrawer extends ConsumerWidget {
                                 .titleLarge!
                                 .copyWith(fontSize: 30, color: Vx.black),
                           ),
-                          Container(child: Text(userEmail)).w(140),
+                          Container(
+                              child: Text(
+                            userEmail,
+                            style: Theme.of(context)
+                                .textTheme
+                                .displaySmall!
+                                .copyWith(fontSize: 15),
+                          )).w(140),
                         ],
                       ).pOnly(left: 20),
                       Spacer(),

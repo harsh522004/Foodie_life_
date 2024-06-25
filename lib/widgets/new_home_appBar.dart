@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+
 import 'package:foodei_life/constant/images.dart';
 import 'package:foodei_life/theme/colors.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -14,15 +15,17 @@ class NewHomeAppbar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.white.withAlpha(100),
+      backgroundColor: Colors.transparent, // Colors.white.withAlpha(100),
       actions: [
         GestureDetector(
           onTap: onSideMenuTap,
           child: Container(
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15), color: hgreyBg),
+                borderRadius: BorderRadius.circular(15),
+                color: Theme.of(context).shadowColor),
             child: Image.asset(
               hBarIcon,
+              color: Theme.of(context).iconTheme.color,
             ).p(10),
           ).pOnly(left: 10).h(45),
         ),

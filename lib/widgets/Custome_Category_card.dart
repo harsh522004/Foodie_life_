@@ -25,7 +25,7 @@ class CustomeCategoryCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         side: BorderSide(color: Colors.black),
       ),
-      tileColor: isSelected ? hyellow02 : hcreamBg,
+      tileColor: isSelected ? hyellow02 : Theme.of(context).cardColor,
       leading: CircleAvatar(
         backgroundImage: selectedCategory.categoryImage,
       ).pOnly(bottom: 5),
@@ -33,7 +33,10 @@ class CustomeCategoryCard extends StatelessWidget {
         selectedCategory.title,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+        style: Theme.of(context)
+            .textTheme
+            .displaySmall!
+            .copyWith(fontSize: 12, color: Colors.black),
       ).pOnly(bottom: 5),
       selectedTileColor: hyellow02,
     ).w(150).pOnly(left: 10);

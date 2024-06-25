@@ -133,7 +133,8 @@ class _RecipeFinalState extends ConsumerState<NewRecipeFinal> {
                 bottomRight: Radius.circular(0),
               ),
               child: Container(
-                decoration: BoxDecoration(color: Colors.white),
+                decoration: BoxDecoration(
+                    color: Theme.of(context).scaffoldBackgroundColor),
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -276,7 +277,8 @@ class TypeContainer extends StatelessWidget {
           ).h(40).w(40).pOnly(top: 8),
           Text(
             tag,
-            style: TextStyle(fontSize: 8),
+            style:
+                Theme.of(context).textTheme.displaySmall!.copyWith(fontSize: 8),
           ).pOnly(top: 8),
         ],
       ),

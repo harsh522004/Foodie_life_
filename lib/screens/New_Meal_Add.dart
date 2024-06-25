@@ -148,7 +148,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      backgroundColor: hscreenBg,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         flexibleSpace: ClipRRect(
           child: BackdropFilter(
@@ -194,7 +194,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
               // Categories Dropdown
               Container(
                 decoration:
-                    BoxDecoration(border: Border.all(color: Colors.black)),
+                    BoxDecoration(border: Border.all(color: Colors.grey)),
                 child: MultiSelectDialogField<CategoryModel>(
                   checkColor: Colors.blue,
                   selectedItemsTextStyle: TextStyle(color: Colors.black),
@@ -396,12 +396,7 @@ class _AddRecipeScreenState extends ConsumerState<AddRecipeScreen> {
               20.heightBox,
 // Elevated Button
               ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blueGrey,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
+                style: Theme.of(context).elevatedButtonTheme.style,
                 onPressed: () async {
 // Validate form
                   setState(() {

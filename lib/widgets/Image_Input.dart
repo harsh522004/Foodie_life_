@@ -63,7 +63,7 @@ class _ImageInputState extends State<ImageInput> {
         ),
         label: Text(
           'Take Picture',
-          style: TextStyle(color: Colors.black, fontSize: 17),
+          style: Theme.of(context).textTheme.bodyLarge,
         ));
 
     if (_selectedImage != null) {

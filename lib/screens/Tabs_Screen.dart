@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:foodei_life/screens/New_Home_screen.dart';
 import 'package:foodei_life/screens/New_saved_Recipe.dart';
 import 'package:foodei_life/theme/colors.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import '../Provider/Filter_Provider.dart';
 import 'New_Meal_Add.dart';
@@ -53,6 +54,9 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
       extendBody: true,
       bottomNavigationBar: (bottomBarPages.length <= maxCount)
           ? AnimatedNotchBottomBar(
+              color:
+                  Theme.of(context).bottomNavigationBarTheme.backgroundColor ??
+                      Colors.white,
               showBlurBottomBar: true,
               blurOpacity: 0.9,
               blurFilterX: 5.0,
@@ -63,18 +67,19 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
                 BottomBarItem(
                   inActiveItem: Icon(
                     Icons.home_filled,
-                    color: Colors.blueGrey,
+                    color: Theme.of(context).iconTheme.color,
                   ),
-                  activeItem: Icon(Icons.home_filled, color: Colors.black),
+                  activeItem:
+                      Icon(Icons.home_filled, color: Vx.hexToColor("2d2d2d")),
                 ),
                 BottomBarItem(
                   inActiveItem: Icon(
                     Icons.add,
-                    color: Colors.blueGrey,
+                    color: Theme.of(context).iconTheme.color,
                   ),
                   activeItem: Icon(
                     Icons.add,
-                    color: Colors.black,
+                    color: Vx.hexToColor("2d2d2d"),
                   ),
                 ),
 
@@ -82,11 +87,11 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
                 BottomBarItem(
                   inActiveItem: Icon(
                     Icons.bookmark,
-                    color: Colors.blueGrey,
+                    color: Theme.of(context).iconTheme.color,
                   ),
                   activeItem: Icon(
                     Icons.bookmark,
-                    color: Colors.black,
+                    color: Vx.hexToColor("2d2d2d"),
                   ),
                 ),
               ],

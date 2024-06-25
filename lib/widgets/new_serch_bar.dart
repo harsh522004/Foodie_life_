@@ -34,6 +34,10 @@ class NewSearchBar extends StatelessWidget {
               filled: true,
               fillColor: backgroundColor,
               hintText: hintText,
+              hintStyle: Theme.of(context)
+                  .textTheme
+                  .titleMedium!
+                  .copyWith(fontSize: 15),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(15),
                 borderSide: BorderSide.none,

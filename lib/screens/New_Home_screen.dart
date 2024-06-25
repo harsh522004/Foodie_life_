@@ -7,6 +7,7 @@ import 'package:foodei_life/Provider/Favouirte_Meal_Provider.dart';
 import 'package:foodei_life/Provider/Filter_Provider.dart';
 import 'package:foodei_life/Provider/Most_Popular_Recipe_provider.dart';
 import 'package:foodei_life/Provider/Serch_bar_provider.dart';
+
 import 'package:foodei_life/theme/colors.dart';
 import 'package:foodei_life/widgets/New_Category_Grid.dart';
 import 'package:foodei_life/widgets/New_Recipes_Grid.dart';
@@ -129,7 +130,7 @@ class _NewHomeScreenState extends ConsumerState<NewHomeScreen> {
     // scaffold
     return Scaffold(
       key: _scaffoldKeyNew,
-      backgroundColor: hscreenBg,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       drawer: const SideDrawer(),
       appBar: NewHomeAppbar(
         appBar: AppBar(),
